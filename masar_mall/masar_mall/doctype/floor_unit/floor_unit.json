@@ -1,0 +1,172 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:unit_name",
+ "creation": "2025-08-14 16:59:15.990143",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_86y0",
+  "unit_name",
+  "column_break_fino",
+  "date",
+  "whole_space",
+  "rent_space",
+  "disable",
+  "amended_from",
+  "ref_doc",
+  "section_break_mahi",
+  "property",
+  "floor",
+  "wh_name",
+  "column_break_gabe",
+  "area",
+  "company"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_86y0",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Floor Unit",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "unit_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_fino",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "read_only_depends_on": "eval: doc.whole_space === 0"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "disable",
+   "fieldtype": "Check",
+   "label": "Disable"
+  },
+  {
+   "fieldname": "section_break_mahi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "unit_name",
+   "fieldname": "property",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Property",
+   "link_filters": "[[\"Property\",\"disabled\",\"=\",0],[\"Property\",\"docstatus\",\"=\",\"1\"]]",
+   "mandatory_depends_on": "unit_name",
+   "options": "Property",
+   "reqd": 1
+  },
+  {
+   "depends_on": "floor",
+   "fieldname": "area",
+   "fieldtype": "Float",
+   "label": "Area",
+   "mandatory_depends_on": "floor",
+   "precision": "3"
+  },
+  {
+   "fieldname": "column_break_gabe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "property",
+   "fieldname": "floor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Floor",
+   "mandatory_depends_on": "property",
+   "options": "Floor"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.rent_space == 0",
+   "fieldname": "whole_space",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Whole Space",
+   "read_only_depends_on": "eval: doc.rent_space == 1"
+  },
+  {
+   "fetch_from": "floor.wh_name",
+   "fieldname": "wh_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Warehouse Name"
+  },
+  {
+   "fetch_from": "floor.company",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Company"
+  },
+  {
+   "fieldname": "ref_doc",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Reference Document",
+   "options": "Stock Reconciliation"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.whole_space == 0",
+   "fieldname": "rent_space",
+   "fieldtype": "Check",
+   "label": "Rent Space",
+   "read_only_depends_on": "eval: doc.whole_space == 1"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-08-15 00:23:11.981792",
+ "modified_by": "Administrator",
+ "module": "Masar Mall",
+ "name": "Floor Unit",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
