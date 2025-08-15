@@ -1,5 +1,5 @@
-# Copyright (c) 2025, KCSC and contributors
-# For license information, please see license.txt
+# # Copyright (c) 2025, KCSC and contributors
+# # For license information, please see license.txt
 
 import frappe
 from frappe.model.document import Document
@@ -52,8 +52,7 @@ class FloorUnit(Document):
                 "items": [
                     {
                         "item_code": item.name,
-                        "qty": self.area,
-                        "valuation_rate": 1
+                        "qty": self.area
                     }
                 ]
             })

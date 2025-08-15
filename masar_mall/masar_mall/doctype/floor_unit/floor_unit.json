@@ -12,6 +12,7 @@
   "date",
   "whole_space",
   "rent_space",
+  "return_space",
   "disable",
   "amended_from",
   "ref_doc",
@@ -139,12 +140,19 @@
    "fieldtype": "Check",
    "label": "Rent Space",
    "read_only_depends_on": "eval: doc.whole_space == 1"
+  },
+  {
+   "default": "0",
+   "fieldname": "return_space",
+   "fieldtype": "Check",
+   "label": "Return Space",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-15 00:23:11.981792",
+ "modified": "2025-08-15 14:03:11.505142",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Floor Unit",
