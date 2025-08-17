@@ -9,18 +9,24 @@
   "section_break_xw1r",
   "naming_series",
   "action_type",
+  "is_existing",
+  "is_new_floor_unit",
   "property",
   "floor",
-  "floor_unit",
-  "exit_floor_unit",
-  "wh_name",
+  "new_floor_unit",
+  "rent_exist_unit",
+  "return_exit_unit",
+  "return_wh_name",
+  "rent_exist_wh_name",
   "column_break_cami",
   "date",
   "company",
-  "area",
+  "rent_exist_area",
+  "new_area",
   "exit_area",
   "amended_from",
-  "ref_doc"
+  "ref_doc",
+  "ref_doc_return"
  ],
  "fields": [
   {
@@ -57,20 +63,21 @@
    "read_only": 1
   },
   {
-   "depends_on": "action_type",
+   "depends_on": "eval:doc.is_new_floor_unit ==1 || doc.is_existing\r\n== 1",
    "fieldname": "property",
    "fieldtype": "Link",
    "label": "Property",
    "link_filters": "[[\"Property\",\"disabled\",\"=\",0],[\"Property\",\"docstatus\",\"=\",\"1\"]]",
+   "mandatory_depends_on": "eval:doc.is_new_floor_unit ==1 || doc.is_existing\r\n== 1",
    "options": "Property",
    "reqd": 1
   },
   {
-   "depends_on": "action_type",
+   "depends_on": "eval:doc.is_new_floor_unit ==1 || doc.is_existing\r\n== 1",
    "fieldname": "floor",
    "fieldtype": "Link",
    "label": "Floor",
-   "mandatory_depends_on": "action_type",
+   "mandatory_depends_on": "eval:doc.is_new_floor_unit ==1 || doc.is_existing\r\n== 1",
    "options": "Floor"
   },
   {
@@ -80,21 +87,6 @@
    "label": "Action Type",
    "options": "\nRent Space\nReturn Space",
    "reqd": 1
-  },
-  {
-   "depends_on": "eval: doc.action_type == 'Rent Space'",
-   "fieldname": "floor_unit",
-   "fieldtype": "Data",
-   "label": "Floor Unit",
-   "mandatory_depends_on": "eval: doc.action_type == 'Rent Space'"
-  },
-  {
-   "depends_on": "eval: doc.action_type == 'Rent Space'",
-   "fieldname": "area",
-   "fieldtype": "Float",
-   "label": "Area",
-   "mandatory_depends_on": "eval: doc.action_type == 'Rent Space'",
-   "precision": "3"
   },
   {
    "depends_on": "action_type",
@@ -113,36 +105,96 @@
   },
   {
    "depends_on": "eval: doc.action_type == 'Return Space'",
-   "fieldname": "exit_floor_unit",
-   "fieldtype": "Link",
-   "label": "Floor Unit",
-   "mandatory_depends_on": "eval: doc.action_type == 'Return Space'",
-   "options": "Floor Unit"
-  },
-  {
-   "depends_on": "eval: doc.action_type == 'Return Space'",
-   "fetch_from": "exit_floor_unit.area",
+   "fetch_from": "return_exit_unit.area",
    "fieldname": "exit_area",
    "fieldtype": "Float",
-   "label": "Area",
+   "label": "Current Area",
    "mandatory_depends_on": "eval: doc.action_type == 'Return Space'",
    "precision": "3",
    "read_only": 1
   },
   {
-   "fetch_from": "exit_floor_unit.wh_name",
+   "depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_new_floor_unit ==1",
+   "fieldname": "new_floor_unit",
+   "fieldtype": "Data",
+   "label": "Floor Unit",
+   "mandatory_depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_new_floor_unit ==1"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: (doc.action_type == 'Rent Space' || doc.action_type == 'Return Space') && doc.is_new_floor_unit != 1",
+   "fieldname": "is_existing",
+   "fieldtype": "Check",
+   "label": " Is Existing Floor Unit"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_existing != 1",
+   "fieldname": "is_new_floor_unit",
+   "fieldtype": "Check",
+   "label": " Is New Floor Unit"
+  },
+  {
+   "depends_on": "eval:doc.action_type == 'Return Space' && doc.is_existing ==1",
+   "fieldname": "return_exit_unit",
+   "fieldtype": "Link",
+   "label": "Floor Unit",
+   "mandatory_depends_on": "eval:doc.action_type == 'Return Space' && doc.is_existing ==1",
+   "options": "Floor Unit"
+  },
+  {
+   "depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_existing == 1",
+   "fetch_from": "rent_exist_unit.area",
+   "fieldname": "rent_exist_area",
+   "fieldtype": "Float",
+   "label": "Current Area",
+   "precision": "3",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_existing == 1",
+   "fieldname": "rent_exist_unit",
+   "fieldtype": "Link",
+   "label": "Floor Unit",
+   "mandatory_depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_existing == 1",
+   "options": "Floor Unit"
+  },
+  {
+   "depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_existing == 1 || doc.is_new_floor_unit == 1",
+   "fieldname": "new_area",
+   "fieldtype": "Float",
+   "label": "New Area",
+   "mandatory_depends_on": "eval: doc.action_type == 'Rent Space'",
+   "precision": "3"
+  },
+  {
+   "fetch_from": "return_exit_unit.wh_name",
    "fetch_if_empty": 1,
-   "fieldname": "wh_name",
+   "fieldname": "return_wh_name",
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Warehouse Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "rent_exist_unit.wh_name",
+   "fieldname": "rent_exist_wh_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Warehouse name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ref_doc_return",
+   "fieldtype": "Data",
+   "label": "Return Reference Document",
    "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-15 14:16:40.277158",
+ "modified": "2025-08-18 00:27:03.311432",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Unit Managment",
