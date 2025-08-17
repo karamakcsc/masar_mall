@@ -33,7 +33,12 @@
   "address",
   "city",
   "section_break_ufmj",
+  "accommodation_type",
   "rent_details",
+  "section_break_repy",
+  "total_rent_elements",
+  "column_break_hgzc",
+  "total_rent_amount",
   "terms_section",
   "lease_start",
   "occupation_date",
@@ -672,13 +677,40 @@
    "fieldname": "rent_details",
    "fieldtype": "Table",
    "label": "Rent Details",
-   "options": "Lease and Contract Schedule Premises"
+   "options": "Lease Contract Details"
+  },
+  {
+   "fieldname": "accommodation_type",
+   "fieldtype": "Link",
+   "label": "Accommodation Type",
+   "options": "Accommodation Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_repy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_rent_elements",
+   "fieldtype": "Float",
+   "label": "Total Rent Elements",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_rent_amount",
+   "fieldtype": "Float",
+   "label": "Total Rent Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hgzc",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-14 21:13:28.607622",
+ "modified": "2025-08-18 01:37:08.096661",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",

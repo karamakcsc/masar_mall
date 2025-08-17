@@ -1,0 +1,90 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-12 11:45:14.199319",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rent_amount_section",
+  "rent_item",
+  "floor_unit",
+  "area",
+  "column_break_plzh",
+  "rate",
+  "amount",
+  "section_break_rput",
+  "user_remark"
+ ],
+ "fields": [
+  {
+   "fieldname": "rent_amount_section",
+   "fieldtype": "Section Break",
+   "label": "Rent Amount"
+  },
+  {
+   "fieldname": "floor_unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Floor Unit",
+   "link_filters": "[[\"Floor Unit\",\"disable\",\"=\",0],[\"Floor Unit\",\"docstatus\",\"=\",\"1\"],[\"Floor Unit\",\"rent_space\",\"=\",1]]",
+   "options": "Floor Unit",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "floor_unit.area",
+   "fieldname": "area",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Area/Square Meter",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_plzh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Rate"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Amount ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_rput",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "user_remark",
+   "fieldtype": "Small Text",
+   "label": "User Remark"
+  },
+  {
+   "fieldname": "rent_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Rent Item",
+   "link_filters": "[[\"Item\", \"disabled\", \"=\", 0],\r\n [\"Item\", \"item_group\", \"in\", [\"Rent Space\", \"Services\"]]]",
+   "options": "Item",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-08-18 01:32:33.943515",
+ "modified_by": "Administrator",
+ "module": "Masar Mall",
+ "name": "Lease Contract Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
