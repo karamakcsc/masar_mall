@@ -1,27 +1,29 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:unit_name",
  "creation": "2025-08-14 16:59:15.990143",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_86y0",
-  "unit_name",
+  "action_type",
+  "is_existing",
+  "is_new_floor_unit",
+  "floor_unit_new",
   "column_break_fino",
   "date",
-  "whole_space",
   "rent_space",
   "return_space",
   "disable",
   "amended_from",
   "ref_doc",
+  "tenant",
   "section_break_mahi",
   "property",
   "floor",
-  "wh_name",
+  "floor_wh",
   "column_break_gabe",
-  "area",
+  "space",
   "company"
  ],
  "fields": [
@@ -38,14 +40,6 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "unit_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Unit Name",
-   "reqd": 1,
-   "unique": 1
   },
   {
    "fieldname": "column_break_fino",
@@ -70,24 +64,14 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "unit_name",
    "fieldname": "property",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Property",
    "link_filters": "[[\"Property\",\"disabled\",\"=\",0],[\"Property\",\"docstatus\",\"=\",\"1\"]]",
-   "mandatory_depends_on": "unit_name",
    "options": "Property",
    "reqd": 1
-  },
-  {
-   "depends_on": "floor",
-   "fieldname": "area",
-   "fieldtype": "Float",
-   "label": "Area",
-   "mandatory_depends_on": "floor",
-   "precision": "3"
   },
   {
    "fieldname": "column_break_gabe",
@@ -104,63 +88,95 @@
    "options": "Floor"
   },
   {
-   "default": "0",
-   "depends_on": "eval: doc.rent_space == 0",
-   "fieldname": "whole_space",
-   "fieldtype": "Check",
-   "in_standard_filter": 1,
-   "label": "Whole Space",
-   "read_only_depends_on": "eval: doc.rent_space == 1"
-  },
-  {
-   "fetch_from": "floor.wh_name",
-   "fieldname": "wh_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Warehouse Name"
-  },
-  {
-   "fetch_from": "floor.company",
+   "depends_on": "floor",
+   "fetch_from": "property.company",
    "fieldname": "company",
    "fieldtype": "Data",
-   "hidden": 1,
    "label": "Company"
   },
   {
    "fieldname": "ref_doc",
    "fieldtype": "Link",
-   "hidden": 1,
    "label": "Reference Document",
-   "options": "Stock Reconciliation"
+   "options": "Stock Entry"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
-   "depends_on": "eval: doc.whole_space == 0",
    "fieldname": "rent_space",
    "fieldtype": "Check",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Rent Space",
-   "read_only_depends_on": "eval: doc.whole_space == 1"
+   "label": "Rent Space"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "return_space",
    "fieldtype": "Check",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Return Space",
-   "read_only": 1
+   "label": "Return Space"
+  },
+  {
+   "fieldname": "action_type",
+   "fieldtype": "Select",
+   "label": "Action Type",
+   "options": "\nRent Space\nReturn Space"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: (doc.action_type == 'Rent Space' || doc.action_type == 'Return Space') && doc.is_new_floor_unit != 1",
+   "fieldname": "is_existing",
+   "fieldtype": "Check",
+   "label": " Is Existing Floor Unit"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_existing != 1",
+   "fieldname": "is_new_floor_unit",
+   "fieldtype": "Check",
+   "label": " Is New Floor Unit"
+  },
+  {
+   "depends_on": "floor",
+   "fieldname": "space",
+   "fieldtype": "Float",
+   "label": "Space",
+   "mandatory_depends_on": "floor",
+   "precision": "3"
+  },
+  {
+   "fieldname": "floor_unit_new",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Floor Unit Name",
+   "unique": 1
+  },
+  {
+   "fetch_from": "floor.wh_name",
+   "fieldname": "floor_wh",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Warehouse Name"
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "rent_space",
+   "fieldname": "tenant",
+   "fieldtype": "Link",
+   "label": "Tenant / Lessee",
+   "mandatory_depends_on": "rent_space",
+   "options": "Customer"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-15 14:35:29.710038",
+ "modified": "2025-09-03 00:16:25.118923",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Floor Unit",
- "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

@@ -7,9 +7,10 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_uykb",
-  "lease_conract",
+  "lease_contract",
   "naming_series",
-  "amended_from"
+  "amended_from",
+  "invoice"
  ],
  "fields": [
   {
@@ -27,30 +28,38 @@
    "search_index": 1
   },
   {
-   "fieldname": "lease_conract",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Lease Conract",
-   "options": "Lease Contract",
-   "reqd": 1
-  },
-  {
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Naming Series",
    "options": "LCD-.YYYY-."
+  },
+  {
+   "fieldname": "invoice",
+   "fieldtype": "Table",
+   "label": "Invoice",
+   "options": "Lease Contrant invoice"
+  },
+  {
+   "fieldname": "lease_contract",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Lease Contract",
+   "options": "Lease Contract",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-17 22:52:15.317010",
+ "modified": "2025-08-26 13:53:37.818861",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Schedule",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,

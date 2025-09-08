@@ -148,23 +148,26 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"masar_mall.tasks.all"
 # 	],
-# 	"daily": [
-# 		"masar_mall.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"masar_mall.tasks.hourly"
-# 	],
+# 	
+"daily": [
+        "masar_mall.masar_mall.doctype.lease_contract.tasks.check_lease_end_and_create_invoice"
+    ]
+
+,
+	"hourly": [
+		"masar_mall.masar_mall.doctype.invoice_task.update_lease_schedule_status_from_invoice"
+	],
 # 	"weekly": [
 # 		"masar_mall.tasks.weekly"
 # 	],
 # 	"monthly": [
 # 		"masar_mall.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------

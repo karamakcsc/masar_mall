@@ -13,6 +13,8 @@
   "column_break_plzh",
   "rate",
   "amount",
+  "item_group",
+  "rent_space",
   "section_break_rput",
   "user_remark"
  ],
@@ -28,11 +30,11 @@
    "in_list_view": 1,
    "label": "Floor Unit",
    "link_filters": "[[\"Floor Unit\",\"disable\",\"=\",0],[\"Floor Unit\",\"docstatus\",\"=\",\"1\"],[\"Floor Unit\",\"rent_space\",\"=\",1]]",
-   "options": "Floor Unit",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.rent_space==1",
+   "options": "Floor Unit"
   },
   {
-   "fetch_from": "floor_unit.area",
+   "fetch_from": "floor_unit.space",
    "fieldname": "area",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -47,7 +49,8 @@
    "fieldname": "rate",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Rate"
+   "label": "Rate",
+   "reqd": 1
   },
   {
    "fieldname": "amount",
@@ -73,12 +76,29 @@
    "link_filters": "[[\"Item\", \"disabled\", \"=\", 0],\r\n [\"Item\", \"item_group\", \"in\", [\"Rent Space\", \"Services\"]]]",
    "options": "Item",
    "reqd": 1
+  },
+  {
+   "fetch_from": "rent_item.item_code",
+   "fetch_if_empty": 1,
+   "fieldname": "item_group",
+   "fieldtype": "Data",
+   "label": "Item Group",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "rent_item.custom_rent_space",
+   "fetch_if_empty": 1,
+   "fieldname": "rent_space",
+   "fieldtype": "Check",
+   "label": "Rent Space",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-18 01:32:33.943515",
+ "modified": "2025-09-07 15:50:32.838988",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Details",

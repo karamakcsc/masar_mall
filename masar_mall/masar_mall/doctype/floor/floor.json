@@ -8,6 +8,7 @@
  "field_order": [
   "floor_name",
   "property",
+  "space",
   "company",
   "wh_name",
   "parent_wh",
@@ -15,6 +16,7 @@
   "date",
   "disable",
   "address",
+  "ref_doc",
   "amended_from"
  ],
  "fields": [
@@ -96,12 +98,27 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Parent Warehouse"
+  },
+  {
+   "depends_on": "property",
+   "fieldname": "space",
+   "fieldtype": "Float",
+   "label": "Space",
+   "mandatory_depends_on": "property"
+  },
+  {
+   "fieldname": "ref_doc",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Reference Document",
+   "options": "Stock Reconciliation",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-14 23:21:11.099557",
+ "modified": "2025-09-01 14:26:50.762427",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Floor",

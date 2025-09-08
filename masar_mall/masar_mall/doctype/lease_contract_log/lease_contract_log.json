@@ -1,0 +1,136 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-09-07 12:45:06.037793",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_o3tb",
+  "amended_from",
+  "tenant_lessee",
+  "lease_contract",
+  "lease_start",
+  "lease_end",
+  "rent_item",
+  "floor_unit",
+  "rate",
+  "amount",
+  "invoice_start",
+  "invoice_end",
+  "invoice_number",
+  "invoice_statu",
+  "is_allowance"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_o3tb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Lease Contract Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "tenant_lessee",
+   "fieldtype": "Link",
+   "label": "Tenant / Lessee",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lease_contract",
+   "fieldtype": "Link",
+   "label": "Lease Contract",
+   "options": "Lease Contract"
+  },
+  {
+   "fieldname": "lease_start",
+   "fieldtype": "Date",
+   "label": "Lease Start"
+  },
+  {
+   "fieldname": "lease_end",
+   "fieldtype": "Date",
+   "label": "Lease End"
+  },
+  {
+   "fieldname": "rent_item",
+   "fieldtype": "Data",
+   "label": "Rent Item"
+  },
+  {
+   "fieldname": "floor_unit",
+   "fieldtype": "Data",
+   "label": "Floor Unit"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Float",
+   "label": "Rate"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Float",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "invoice_start",
+   "fieldtype": "Date",
+   "label": "Invoice Start"
+  },
+  {
+   "fieldname": "invoice_end",
+   "fieldtype": "Date",
+   "label": "Invoice End"
+  },
+  {
+   "fieldname": "invoice_number",
+   "fieldtype": "Link",
+   "label": "Invoice Number",
+   "options": "Sales Invoice"
+  },
+  {
+   "fieldname": "invoice_statu",
+   "fieldtype": "Data",
+   "label": "Invoice Statu"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_allowance",
+   "fieldtype": "Check",
+   "label": "Is Allowance"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-09-07 16:48:12.519458",
+ "modified_by": "Administrator",
+ "module": "Masar Mall",
+ "name": "Lease Contract Log",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -46,21 +46,16 @@
   "or_annual_review_day",
   "month",
   "permitted_usage",
+  "is_stopped",
   "column_break_nfpn",
   "lease_end",
-  "notes",
-  "notes_allowance",
-  "column_break_dflj",
   "period_in_months",
   "pay_type",
   "allowance_period",
   "in_period",
-  "column_break_qqlz",
-  "indefinite_thereafter",
-  "notice_period_in_months_for_indefinite",
   "service_percentage",
-  "include_vat",
   "tax_template",
+  "include_vat",
   "base_rentals_section",
   "base_rentals",
   "section_break_xhee",
@@ -246,20 +241,6 @@
    "label": "Lease End "
   },
   {
-   "fieldname": "notes",
-   "fieldtype": "Small Text",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "notes_allowance",
-   "fieldtype": "Small Text",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "column_break_dflj",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "period_in_months",
    "fieldtype": "Data",
    "label": "Period in Months"
@@ -268,33 +249,18 @@
    "fieldname": "pay_type",
    "fieldtype": "Select",
    "label": "Pay type",
-   "options": "\n1 month\n2 month\n3 month\n6 month\n1 year"
+   "options": "\n1 month\n2 month\n3 month\n4 month\n6 month\n1 year"
   },
   {
    "fieldname": "allowance_period",
-   "fieldtype": "Select",
-   "label": "allowance period ",
-   "options": "Monthly\n2 Month\n3 Month\n4 Month\n6 Month\nyearly"
+   "fieldtype": "Int",
+   "label": "allowance period "
   },
   {
    "default": "0",
    "fieldname": "in_period",
    "fieldtype": "Check",
    "label": "In Period"
-  },
-  {
-   "fieldname": "column_break_qqlz",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "indefinite_thereafter",
-   "fieldtype": "Data",
-   "label": "Indefinite Thereafter"
-  },
-  {
-   "fieldname": "notice_period_in_months_for_indefinite",
-   "fieldtype": "Data",
-   "label": "Notice Period (in months) for Indefinite"
   },
   {
    "default": "0",
@@ -705,12 +671,25 @@
   {
    "fieldname": "column_break_hgzc",
    "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "is_stopped",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Stopped"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-08-18 01:37:08.096661",
+ "links": [
+  {
+   "link_doctype": "Lease Contract Schedule",
+   "link_fieldname": "lease_contract"
+  }
+ ],
+ "modified": "2025-08-26 13:53:44.500877",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",
@@ -718,6 +697,7 @@
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
