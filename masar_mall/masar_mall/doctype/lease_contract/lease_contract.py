@@ -188,23 +188,120 @@ class LeaseContract(Document):
         log.lease_start = self.lease_start
         log.lease_end = self.lease_end
 
-        # Fill from Lease Contract Details (first row)
-        if self.rent_details and len(self.rent_details) > 0:
-            rent_row = self.rent_details[0]
-            log.rent_item = rent_row.rent_item
-            log.floor_unit = rent_row.floor_unit
-            log.rate = rent_row.rate
-            log.amount = rent_row.amount
+        # Log contract status fields
+        log.is_stopped = getattr(self, "is_stopped", 0)
+        log.docstatus = getattr(self, "docstatus", 0)
+        log.status = getattr(self, "status", "")
 
-        # Fill from Lease Contract Invoice (first row)
-        if hasattr(self, "invoice") and self.invoice and len(self.invoice) > 0:
-            invoice_row = self.invoice[0]
-            log.invoice_start = invoice_row.invoice_start
-            log.invoice_end = invoice_row.invoice_end
-            log.invoice_number = invoice_row.invoice_number
-            log.invoice_statu = invoice_row.invoice_statu
-            log.amount = invoice_row.amount  # Overwrites amount if needed
+        # Log all rent_details as child table rows
+        if self.rent_details and len(self.rent_details) > 0:
+            for rent_row in self.rent_details:
+                log.append("rent_details", {
+                    "rent_item": rent_row.rent_item,
+                    "floor_unit": rent_row.floor_unit,
+                    "area_square_meter": getattr(rent_row, 'area_square_meter', ''),
+                    "rate": rent_row.rate,
+                    "amount": rent_row.amount
+                })
+
+        # Get the created Lease Contract Schedule to log its invoice details
+        schedule_name = None
+        try:
+            schedules = frappe.get_all("Lease Contract Schedule", 
+                                     filters={"lease_contract": self.name}, 
+                                     fields=["name"])
+            if schedules:
+                schedule_name = schedules[0].name
+        except Exception as e:
+            frappe.throw(f"Error finding Lease Contract Schedule: {str(e)}")
+
+        # Log all invoice details from Lease Contract Schedule as child table rows
+        if schedule_name:
+            try:
+                schedule_doc = frappe.get_doc("Lease Contract Schedule", schedule_name)
+                if hasattr(schedule_doc, "invoice") and schedule_doc.invoice:
+                    for invoice_row in schedule_doc.invoice:
+                        log.append("invoice", {
+                            "lease_start": getattr(invoice_row, 'lease_start', ''),
+                            "lease_end": getattr(invoice_row, 'lease_end', ''),
+                            "amount": getattr(invoice_row, 'amount', 0),
+                            "rate": getattr(invoice_row, 'rate', 0),
+                            "tax": getattr(invoice_row, 'tax', ''),
+                            "invoice_number": getattr(invoice_row, 'invoice_number', ''),
+                            "invoice_status": getattr(invoice_row, 'invoice_status', ''),
+                            "is_allowance": getattr(invoice_row, 'is_allowance', 0)
+                        })
+            except Exception as e:
+                frappe.throw(f"Error logging invoice details: {str(e)}")
 
         log.insert(ignore_permissions=True)
         log.submit()
+
+    def on_update_after_submit(self):
+        self.update_log()
+
+    def update_log(self):
+        """Update Lease Contract Log to reflect only the changes in the Lease Contract"""
+        log_name = frappe.get_value("Lease Contract Log", {"lease_contract": self.name}, "name")
+        if not log_name:
+            frappe.msgprint("No log found for this contract. Log is only created when the contract is submitted.")
+            return
+
+        log_doc = frappe.get_doc("Lease Contract Log", log_name)
+        before = self.get_doc_before_save()
+
+        changed_fields = []
+        # List of fields to track
+        fields_to_track = [
+            "tenant_lessee", "lease_start", "lease_end", "is_stopped", "docstatus", "status"
+        ]
+        for field in fields_to_track:
+            old = getattr(before, field, None)
+            new = getattr(self, field, None)
+            if old != new:
+                setattr(log_doc, field, new)
+                changed_fields.append(field)
+
+        # Rent Details child table
+        if before.rent_details != self.rent_details:
+            log_doc.set("rent_details", [])
+            for rent_row in self.rent_details:
+                log_doc.append("rent_details", {
+                    "rent_item": rent_row.rent_item,
+                    "floor_unit": rent_row.floor_unit,
+                    "area_square_meter": getattr(rent_row, 'area_square_meter', ''),
+                    "rate": rent_row.rate,
+                    "amount": rent_row.amount
+                })
+            changed_fields.append("rent_details")
+
+        # Invoice child table (from Lease Contract Schedule)
+        schedule_name = frappe.get_value("Lease Contract Schedule", {"lease_contract": self.name}, "name")
+        invoice_changed = False
+        if schedule_name:
+            schedule_doc = frappe.get_doc("Lease Contract Schedule", schedule_name)
+            old_invoice = getattr(before, "invoice", [])
+            new_invoice = getattr(schedule_doc, "invoice", [])
+            if old_invoice != new_invoice:
+                log_doc.set("invoice", [])
+                for invoice_row in new_invoice:
+                    log_doc.append("invoice", {
+                        "lease_start": getattr(invoice_row, 'lease_start', ''),
+                        "lease_end": getattr(invoice_row, 'lease_end', ''),
+                        "amount": getattr(invoice_row, 'amount', 0),
+                        "rate": getattr(invoice_row, 'rate', 0),
+                        "tax": getattr(invoice_row, 'tax', ''),
+                        "invoice_number": getattr(invoice_row, 'invoice_number', ''),
+                        "invoice_status": getattr(invoice_row, 'invoice_status', ''),
+                        "is_allowance": getattr(invoice_row, 'is_allowance', 0)
+                    })
+                changed_fields.append("invoice")
+
+        log_doc.save(ignore_permissions=True)
+        if changed_fields:
+            frappe.msgprint(f"Lease Contract Log updated: {', '.join(changed_fields)}")
+        else:
+            frappe.msgprint("No changes detected in Lease Contract.")
+
+    
 

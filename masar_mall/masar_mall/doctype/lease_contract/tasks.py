@@ -4,27 +4,21 @@
 import frappe
 from frappe.utils import getdate, nowdate
 
-
 def all():
     frappe.logger().info("This runs on every scheduler tick")
-
 
 def daily():
     frappe.logger().info("This runs daily")
     check_lease_end_and_create_invoice()
 
-
 def hourly():
     frappe.logger().info("This runs hourly")
-
 
 def weekly():
     frappe.logger().info("This runs weekly")
 
-
 def monthly():
     frappe.logger().info("This runs monthly")
-
 
 def check_lease_end_and_create_invoice():
     """Check all Lease Contracts daily and create Sales Invoice for each payment period"""
@@ -73,9 +67,9 @@ def check_lease_end_and_create_invoice():
                     if getattr(row, "invoice_number", None):
                         continue
                     
-                    # ✅ ONLY create invoice if lease_start matches today
+                    # ✅ ONLY create invoice if lease_start matches today (date only)
                     row_start_date = getdate(row.lease_start)
-                    if row_start_date != today:
+                    if row_start_date.strftime("%Y-%m-%d") != today.strftime("%Y-%m-%d"):
                         continue  # Skip this row - not due today
                     
                     # Create individual invoice for this payment period
@@ -84,7 +78,6 @@ def check_lease_end_and_create_invoice():
         except Exception as e:
             frappe.logger().error(f"❌ Error processing lease {lease.name}: {str(e)}")
             continue
-
 
 def create_individual_invoice(lease_doc, payment_row, schedule_doc):
     """Create a single Sales Invoice for one payment period/row"""

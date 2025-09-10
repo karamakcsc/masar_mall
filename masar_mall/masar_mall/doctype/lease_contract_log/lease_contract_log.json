@@ -11,15 +11,11 @@
   "lease_contract",
   "lease_start",
   "lease_end",
-  "rent_item",
-  "floor_unit",
-  "rate",
-  "amount",
-  "invoice_start",
-  "invoice_end",
-  "invoice_number",
-  "invoice_statu",
-  "is_allowance"
+  "rent_details",
+  "invoice",
+  "is_stopped",
+  "docstatus1",
+  "status"
  ],
  "fields": [
   {
@@ -60,57 +56,43 @@
    "label": "Lease End"
   },
   {
-   "fieldname": "rent_item",
-   "fieldtype": "Data",
-   "label": "Rent Item"
+   "allow_on_submit": 1,
+   "fieldname": "rent_details",
+   "fieldtype": "Table",
+   "label": "Rent Details",
+   "options": "Lease Contract Details"
   },
   {
-   "fieldname": "floor_unit",
-   "fieldtype": "Data",
-   "label": "Floor Unit"
+   "allow_on_submit": 1,
+   "fieldname": "invoice",
+   "fieldtype": "Table",
+   "label": "Invoice",
+   "options": "Lease Contrant invoice"
   },
   {
-   "fieldname": "rate",
-   "fieldtype": "Float",
-   "label": "Rate"
-  },
-  {
-   "fieldname": "amount",
-   "fieldtype": "Float",
-   "label": "Amount"
-  },
-  {
-   "fieldname": "invoice_start",
-   "fieldtype": "Date",
-   "label": "Invoice Start"
-  },
-  {
-   "fieldname": "invoice_end",
-   "fieldtype": "Date",
-   "label": "Invoice End"
-  },
-  {
-   "fieldname": "invoice_number",
-   "fieldtype": "Link",
-   "label": "Invoice Number",
-   "options": "Sales Invoice"
-  },
-  {
-   "fieldname": "invoice_statu",
-   "fieldtype": "Data",
-   "label": "Invoice Statu"
-  },
-  {
+   "allow_on_submit": 1,
    "default": "0",
-   "fieldname": "is_allowance",
+   "fieldname": "is_stopped",
    "fieldtype": "Check",
-   "label": "Is Allowance"
+   "label": "Is Stopped"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "docstatus1",
+   "fieldtype": "Int",
+   "label": "Docstatus"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-07 16:48:12.519458",
+ "modified": "2025-09-09 15:03:45.399617",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Log",
@@ -130,6 +112,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
