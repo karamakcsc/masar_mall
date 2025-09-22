@@ -67,10 +67,10 @@ def check_lease_end_and_create_invoice():
                     if getattr(row, "invoice_number", None):
                         continue
                     
-                    # ✅ ONLY create invoice if lease_start matches today (date only)
+                    # ✅ Create invoice if lease_start is today OR in the past (catch overdue)
                     row_start_date = getdate(row.lease_start)
-                    if row_start_date.strftime("%Y-%m-%d") != today.strftime("%Y-%m-%d"):
-                        continue  # Skip this row - not due today
+                    if row_start_date > today:
+                        continue  # Future row, not yet due
                     
                     # Create individual invoice for this payment period
                     create_individual_invoice(lease_doc, row, schedule_doc)
