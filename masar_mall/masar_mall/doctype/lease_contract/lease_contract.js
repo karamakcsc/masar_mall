@@ -32,7 +32,7 @@ frappe.ui.form.on('Lease Contract', {
         if (frm.doc.docstatus === 1 && frm.doc.status === "Rent") {
             frm.add_custom_button(__('Terminate'), function() {
                 frappe.confirm(
-                    __('Are you sure you want to terminate this lease contract? This action cannot be undone.'),
+                    __('<b>Are you sure you want to terminate this lease contract? This action cannot be undone.</b>'),
                     function() {
                         frappe.call({
                             doc: frm.doc,

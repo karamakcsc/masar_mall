@@ -10,7 +10,7 @@ def check_lease_end_and_create_invoice():
     leases = frappe.get_all(
         "Lease Contract",
         filters={
-            "is_stopped": 0,
+            "status": "Rent",
             "docstatus": 1
         },
         fields=["name"]
