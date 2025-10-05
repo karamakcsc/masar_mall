@@ -28,9 +28,10 @@
   "tenant_address",
   "premises_section",
   "property",
-  "stand_no",
+  "floor",
   "column_break_wmxq",
   "address",
+  "stand_no",
   "city",
   "section_break_ufmj",
   "accommodation_type",
@@ -42,74 +43,30 @@
   "terms_section",
   "lease_start",
   "occupation_date",
-  "date",
-  "or_annual_review_day",
-  "month",
-  "permitted_usage",
-  "is_stopped",
   "column_break_nfpn",
   "lease_end",
+  "billing_frequency",
+  "column_break_tbiq",
   "period_in_months",
-  "pay_type",
-  "allowance_period",
-  "in_period",
-  "service_percentage",
   "tax_template",
   "include_vat",
-  "base_rentals_section",
-  "base_rentals",
-  "section_break_xhee",
-  "notes_recoveries",
-  "recovery",
+  "section_break_oqrs",
+  "allowance_period",
+  "allowance_note",
+  "column_break_ckoi",
+  "in_period",
+  "out_period",
   "section_break_xerq",
   "naming_series",
-  "deposit_tab",
-  "cash_amount_required",
-  "bank__guarantee_required",
-  "to_be_held_by",
-  "interest_payable",
-  "notes_deposit",
-  "stamp_duty_and_lease_documentations_fees_section",
-  "stamp_duty_amount",
-  "lease_fees_amount",
-  "payable_by",
-  "letting_conditions_section",
-  "payable_to",
-  "formula",
-  "other_conditions_section",
-  "exclusivity_on_business_type",
-  "payment_by_debit_order_enforceable",
-  "installtion_requirements",
-  "other",
-  "adminstrative_section",
-  "analysis_code",
-  "statement_required",
-  "delivery_method",
-  "payment_method",
-  "column_break_lezc",
-  "bank",
-  "branch",
-  "branch_no",
-  "account_type",
-  "account_no",
-  "account_name",
-  "bank_authorisation_ref",
-  "column_break_xzhv",
-  "signed_by_tenant",
-  "signed_by_owner",
-  "description",
-  "status",
-  "date_document",
-  "comments",
-  "column_break_uevc",
-  "authorised_by",
-  "authorised_date",
-  "time",
-  "notes_authorisation",
-  "amended_from",
   "more_info_tab",
+  "contract_status_section",
+  "status",
+  "column_break_qmvn",
+  "renewed_from",
   "section_break_itjm",
-  "lease_description"
+  "lease_description",
+  "connections_tab",
+  "amended_from"
  ],
  "fields": [
   {
@@ -207,26 +164,6 @@
    "label": "Occupation Date"
   },
   {
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date"
-  },
-  {
-   "fieldname": "or_annual_review_day",
-   "fieldtype": "Data",
-   "label": "or Annual Review Day"
-  },
-  {
-   "fieldname": "month",
-   "fieldtype": "Data",
-   "label": "Month"
-  },
-  {
-   "fieldname": "permitted_usage",
-   "fieldtype": "Data",
-   "label": "Permitted Usage"
-  },
-  {
    "fieldname": "lease_start",
    "fieldtype": "Date",
    "label": "Lease Start"
@@ -243,36 +180,27 @@
   {
    "fieldname": "period_in_months",
    "fieldtype": "Data",
-   "label": "Period in Months"
+   "label": "Period in Months",
+   "read_only": 1
   },
   {
-   "fieldname": "pay_type",
-   "fieldtype": "Select",
-   "label": "Pay type",
-   "options": "\n1 month\n2 month\n3 month\n4 month\n6 month\n1 year"
-  },
-  {
+   "description": "Enter the number of months allowed as a grace period before payment is due.",
    "fieldname": "allowance_period",
    "fieldtype": "Int",
-   "label": "allowance period "
+   "label": "Allowance Period"
   },
   {
    "default": "0",
+   "description": "The allowance period is included within the billing cycle (the invoice covers this period as part of the cycle).",
    "fieldname": "in_period",
    "fieldtype": "Check",
-   "label": "In Period"
-  },
-  {
-   "default": "0",
-   "fieldname": "service_percentage",
-   "fieldtype": "Check",
-   "label": "Service Percentage"
+   "label": "Inside the Billing Period"
   },
   {
    "default": "0",
    "fieldname": "include_vat",
    "fieldtype": "Check",
-   "label": "Include Vat"
+   "label": "Included Vat"
   },
   {
    "fieldname": "tax_template",
@@ -281,271 +209,16 @@
    "options": "Sales Taxes and Charges Template"
   },
   {
-   "fieldname": "base_rentals_section",
-   "fieldtype": "Section Break",
-   "label": "Base Rentals"
-  },
-  {
-   "fieldname": "base_rentals",
-   "fieldtype": "Table",
-   "label": "Base Rentals",
-   "options": "Lease and Contract Schedule Rentals"
-  },
-  {
-   "fieldname": "section_break_xhee",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "notes_recoveries",
-   "fieldtype": "Small Text",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "recovery",
-   "fieldtype": "Table",
-   "label": "Recovery",
-   "options": "Lease and Contract Schedule Recoveries"
-  },
-  {
-   "fieldname": "deposit_tab",
-   "fieldtype": "Tab Break",
-   "label": "Deposit"
-  },
-  {
-   "fieldname": "cash_amount_required",
-   "fieldtype": "Data",
-   "label": "Cash Amount Required"
-  },
-  {
-   "fieldname": "bank__guarantee_required",
-   "fieldtype": "Data",
-   "label": "Bank  Guarantee Required"
-  },
-  {
-   "fieldname": "to_be_held_by",
-   "fieldtype": "Data",
-   "label": "To be Held By"
-  },
-  {
-   "fieldname": "interest_payable",
-   "fieldtype": "Data",
-   "label": "Interest Payable"
-  },
-  {
-   "fieldname": "notes_deposit",
-   "fieldtype": "Small Text",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "stamp_duty_and_lease_documentations_fees_section",
-   "fieldtype": "Section Break",
-   "label": "Stamp Duty and Lease Documentations Fees"
-  },
-  {
-   "fieldname": "stamp_duty_amount",
-   "fieldtype": "Data",
-   "label": "Stamp Duty Amount "
-  },
-  {
-   "fieldname": "lease_fees_amount",
-   "fieldtype": "Float",
-   "label": "Lease Fees Amount"
-  },
-  {
-   "fieldname": "payable_by",
-   "fieldtype": "Select",
-   "label": "Payable By ",
-   "options": "\nTenant\nLease"
-  },
-  {
-   "fieldname": "letting_conditions_section",
-   "fieldtype": "Section Break",
-   "label": "Letting Conditions"
-  },
-  {
-   "fieldname": "payable_to",
-   "fieldtype": "Data",
-   "label": "Payable To"
-  },
-  {
-   "fieldname": "formula",
-   "fieldtype": "Data",
-   "label": "Formula"
-  },
-  {
-   "fieldname": "other_conditions_section",
-   "fieldtype": "Section Break",
-   "label": "Other Conditions"
-  },
-  {
-   "default": "0",
-   "fieldname": "exclusivity_on_business_type",
-   "fieldtype": "Check",
-   "label": "Exclusivity on Business Type"
-  },
-  {
-   "default": "0",
-   "fieldname": "payment_by_debit_order_enforceable",
-   "fieldtype": "Check",
-   "label": "Payment by Debit Order Enforceable"
-  },
-  {
-   "fieldname": "installtion_requirements",
-   "fieldtype": "Small Text",
-   "label": "Installtion Requirements"
-  },
-  {
-   "fieldname": "other",
-   "fieldtype": "Small Text",
-   "label": "Other"
-  },
-  {
-   "fieldname": "adminstrative_section",
-   "fieldtype": "Section Break",
-   "label": "Adminstrative"
-  },
-  {
-   "fieldname": "analysis_code",
-   "fieldtype": "Data",
-   "label": "Analysis Code"
-  },
-  {
-   "default": "0",
-   "fieldname": "statement_required",
-   "fieldtype": "Check",
-   "label": "Statement Required"
-  },
-  {
-   "fieldname": "delivery_method",
-   "fieldtype": "Select",
-   "label": "Delivery Method",
-   "options": "\nEmail"
-  },
-  {
-   "fieldname": "payment_method",
-   "fieldtype": "Select",
-   "label": "Payment Method",
-   "options": "\nCheque / Cash"
-  },
-  {
-   "fieldname": "column_break_lezc",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "bank",
-   "fieldtype": "Data",
-   "label": "Bank"
-  },
-  {
-   "fieldname": "branch",
-   "fieldtype": "Data",
-   "label": "Branch"
-  },
-  {
-   "fieldname": "branch_no",
-   "fieldtype": "Data",
-   "label": "Branch No"
-  },
-  {
-   "fieldname": "account_type",
-   "fieldtype": "Data",
-   "label": "Account Type"
-  },
-  {
-   "fieldname": "account_no",
-   "fieldtype": "Data",
-   "label": "Account No"
-  },
-  {
-   "fieldname": "account_name",
-   "fieldtype": "Data",
-   "label": "Account Name"
-  },
-  {
-   "fieldname": "bank_authorisation_ref",
-   "fieldtype": "Data",
-   "label": "Bank Authorisation Ref"
-  },
-  {
-   "fieldname": "column_break_xzhv",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "signed_by_tenant",
-   "fieldtype": "Check",
-   "label": "Signed by Tenant "
-  },
-  {
-   "default": "0",
-   "fieldname": "signed_by_owner",
-   "fieldtype": "Check",
-   "label": "Signed by Owner"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Small Text",
-   "label": "Description"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Data",
-   "label": "Status "
-  },
-  {
-   "fieldname": "date_document",
-   "fieldtype": "Date",
-   "label": "date"
-  },
-  {
-   "fieldname": "comments",
-   "fieldtype": "Small Text",
-   "label": "Comments"
-  },
-  {
-   "fieldname": "column_break_uevc",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "authorised_by",
-   "fieldtype": "Data",
-   "label": "Authorised by "
-  },
-  {
-   "fieldname": "authorised_date",
-   "fieldtype": "Date",
-   "label": "Authorised Date"
-  },
-  {
-   "fieldname": "time",
-   "fieldtype": "Time",
-   "label": "Time"
-  },
-  {
-   "fieldname": "notes_authorisation",
-   "fieldtype": "Small Text",
-   "label": "Notes"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Lease and Contract Schedule",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "fieldname": "section_break_xerq",
    "fieldtype": "Section Break"
   },
   {
+   "default": "LES-CNT-.",
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "hidden": 1,
    "label": "Naming Series",
-   "options": "LES-CNT-SCD-.",
+   "options": "LES-CNT-.",
    "read_only": 1
   },
   {
@@ -673,12 +346,83 @@
    "fieldtype": "Column Break"
   },
   {
-   "allow_on_submit": 1,
+   "depends_on": "property",
+   "fieldname": "floor",
+   "fieldtype": "Link",
+   "label": "Floor",
+   "mandatory_depends_on": "property",
+   "options": "Floor"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "column_break_tbiq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Lease Contract",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "contract_status_section",
+   "fieldtype": "Section Break",
+   "label": "Contract Status"
+  },
+  {
+   "description": "Select the billing interval in months to determine how often invoices will be generated (e.g., 1 = monthly, 3 = quarterly, 12 = yearly)",
+   "fieldname": "billing_frequency",
+   "fieldtype": "Select",
+   "label": "Billing Frequency/Month",
+   "options": "\n1\n2\n3\n4\n6\n12"
+  },
+  {
    "default": "0",
-   "fieldname": "is_stopped",
+   "description": "The allowance period is added after the billing cycle (extra time granted beyond the regular cycle).",
+   "fieldname": "out_period",
    "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Is Stopped"
+   "label": "Outside the Billing Period"
+  },
+  {
+   "fieldname": "section_break_oqrs",
+   "fieldtype": "Section Break",
+   "label": "Allowance Period "
+  },
+  {
+   "fieldname": "column_break_ckoi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "allowance_note",
+   "fieldtype": "Small Text",
+   "label": "Allowance Note"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nRent\nTerminated\nRenewal",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qmvn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "renewed_from",
+   "fieldtype": "Data",
+   "label": "Renewed From",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -689,7 +433,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-08-26 13:53:44.500877",
+ "modified": "2025-10-01 15:23:30.541732",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",
@@ -711,6 +455,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

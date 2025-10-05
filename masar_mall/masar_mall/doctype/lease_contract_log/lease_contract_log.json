@@ -6,16 +6,15 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_o3tb",
-  "amended_from",
   "tenant_lessee",
   "lease_contract",
+  "amended_from",
+  "column_break_zrrg",
   "lease_start",
   "lease_end",
-  "rent_details",
-  "invoice",
-  "is_stopped",
-  "docstatus1",
-  "status"
+  "status",
+  "section_break_zgfk",
+  "rent_details"
  ],
  "fields": [
   {
@@ -64,41 +63,31 @@
   },
   {
    "allow_on_submit": 1,
-   "fieldname": "invoice",
-   "fieldtype": "Table",
-   "label": "Invoice",
-   "options": "Lease Contrant invoice"
-  },
-  {
-   "allow_on_submit": 1,
-   "default": "0",
-   "fieldname": "is_stopped",
-   "fieldtype": "Check",
-   "label": "Is Stopped"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "docstatus1",
-   "fieldtype": "Int",
-   "label": "Docstatus"
-  },
-  {
-   "allow_on_submit": 1,
    "fieldname": "status",
    "fieldtype": "Data",
    "label": "Status"
+  },
+  {
+   "fieldname": "column_break_zrrg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_zgfk",
+   "fieldtype": "Section Break"
   }
  ],
+ "in_create": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-09 15:03:45.399617",
+ "modified": "2025-10-02 10:29:13.965353",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Log",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -107,6 +96,7 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
    "submit": 1,
    "write": 1

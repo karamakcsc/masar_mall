@@ -30,9 +30,9 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Floor Unit",
-   "link_filters": "[[\"Floor Unit\",\"disable\",\"=\",0],[\"Floor Unit\",\"docstatus\",\"=\",\"1\"],[\"Floor Unit\",\"rent_space\",\"=\",1]]",
-   "mandatory_depends_on": "eval:doc.rent_space==1",
-   "options": "Floor Unit"
+   "mandatory_depends_on": "eval: doc.rent_space== 1",
+   "options": "Floor Unit",
+   "read_only_depends_on": "eval: doc.rent_space== 0"
   },
   {
    "allow_on_submit": 1,
@@ -73,7 +73,6 @@
    "label": "User Remark"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "rent_item",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -84,11 +83,12 @@
   },
   {
    "allow_on_submit": 1,
-   "fetch_from": "rent_item.item_code",
+   "fetch_from": "rent_item.item_group",
    "fetch_if_empty": 1,
    "fieldname": "item_group",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Item Group",
+   "options": "Item Group",
    "read_only": 1
   },
   {
@@ -104,7 +104,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-09 14:53:25.069038",
+ "modified": "2025-09-25 11:10:45.969341",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Details",

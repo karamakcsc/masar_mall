@@ -8,9 +8,14 @@
  "field_order": [
   "section_break_uykb",
   "lease_contract",
-  "naming_series",
+  "column_break_znel",
+  "posting_date",
+  "section_break_jsrw",
+  "invoice",
+  "section_break_djrt",
   "amended_from",
-  "invoice"
+  "column_break_utfw",
+  "naming_series"
  ],
  "fields": [
   {
@@ -28,10 +33,13 @@
    "search_index": 1
   },
   {
+   "default": "LCD-.YYYY.-",
    "fieldname": "naming_series",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Naming Series",
-   "options": "LCD-.YYYY-."
+   "options": "LCD-.YYYY.-",
+   "read_only": 1
   },
   {
    "fieldname": "invoice",
@@ -46,12 +54,35 @@
    "label": "Lease Contract",
    "options": "Lease Contract",
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_djrt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_utfw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_znel",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_jsrw",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-26 13:53:37.818861",
+ "modified": "2025-10-01 16:17:37.049030",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Schedule",
@@ -73,6 +104,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

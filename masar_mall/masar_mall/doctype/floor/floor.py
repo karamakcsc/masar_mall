@@ -38,9 +38,6 @@ class Floor(Document):
             })
             warehouse.insert(ignore_permissions=True)
             warehouse_name = warehouse.name
-    
-        else:
-            frappe.msgprint(f"Floor already exists '{self.name}'.")
 
      
         self.db_set("wh_name", warehouse_name)
@@ -83,5 +80,3 @@ class Floor(Document):
         st_rec.submit()
 
         self.db_set("ref_doc", st_rec.name)
-
-        frappe.msgprint(f"Floor '{self.name}' Created successfully.")

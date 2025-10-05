@@ -153,13 +153,13 @@ scheduler_events = {
 # 		"masar_mall.tasks.all"
 # 	],
 # 	
-"daily": [
-        "masar_mall.masar_mall.doctype.lease_contract.tasks.check_lease_end_and_create_invoice"
+    "daily": [
+        "masar_mall.jobs.create_invoice.check_lease_end_and_create_invoice"
     ]
 
 ,
 	"hourly": [
-		"masar_mall.masar_mall.doctype.invoice_task.update_lease_schedule_status_from_invoice"
+		"masar_mall.jobs.invoice_task.update_lease_schedule_status_from_invoice"
 	],
 # 	"weekly": [
 # 		"masar_mall.tasks.weekly"
@@ -249,7 +249,10 @@ fixtures = [
     {"dt": "Custom Field", "filters": [
         [
             "name", "in", [
-                "Item-custom_rent_space"
+                "Item-custom_rent_space",
+                "Customer-custom_tenant_designation",
+                "Customer-custom_general_contact",
+                "Customer-custom_represented_by,"
             ]
         ]
     ]}

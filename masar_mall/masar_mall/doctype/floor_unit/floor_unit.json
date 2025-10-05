@@ -1,30 +1,33 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "naming_series:",
  "creation": "2025-08-14 16:59:15.990143",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_86y0",
-  "action_type",
-  "is_existing",
-  "is_new_floor_unit",
-  "floor_unit_new",
+  "title",
+  "floor_unit_name",
+  "tenant",
   "column_break_fino",
   "date",
-  "rent_space",
-  "return_space",
-  "disable",
-  "amended_from",
   "ref_doc",
-  "tenant",
+  "rent_space",
+  "free_space",
+  "disabled",
   "section_break_mahi",
   "property",
   "floor",
   "floor_wh",
   "column_break_gabe",
   "space",
-  "company"
+  "company",
+  "section_break_btko",
+  "amended_from",
+  "column_break_zmzn",
+  "naming_series",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -50,14 +53,8 @@
    "fieldname": "date",
    "fieldtype": "Date",
    "label": "Date",
-   "read_only_depends_on": "eval: doc.whole_space === 0"
-  },
-  {
-   "allow_on_submit": 1,
-   "default": "0",
-   "fieldname": "disable",
-   "fieldtype": "Check",
-   "label": "Disable"
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "section_break_mahi",
@@ -95,48 +92,15 @@
    "label": "Company"
   },
   {
-   "fieldname": "ref_doc",
-   "fieldtype": "Link",
-   "label": "Reference Document",
-   "options": "Stock Entry"
-  },
-  {
    "allow_on_submit": 1,
    "default": "0",
    "fieldname": "rent_space",
    "fieldtype": "Check",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Rent Space"
-  },
-  {
-   "allow_on_submit": 1,
-   "default": "0",
-   "fieldname": "return_space",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Return Space"
-  },
-  {
-   "fieldname": "action_type",
-   "fieldtype": "Select",
-   "label": "Action Type",
-   "options": "\nRent Space\nReturn Space"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval: (doc.action_type == 'Rent Space' || doc.action_type == 'Return Space') && doc.is_new_floor_unit != 1",
-   "fieldname": "is_existing",
-   "fieldtype": "Check",
-   "label": " Is Existing Floor Unit"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval: doc.action_type == 'Rent Space' && doc.is_existing != 1",
-   "fieldname": "is_new_floor_unit",
-   "fieldtype": "Check",
-   "label": " Is New Floor Unit"
+   "label": "Rent Space",
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "depends_on": "floor",
@@ -145,13 +109,6 @@
    "label": "Space",
    "mandatory_depends_on": "floor",
    "precision": "3"
-  },
-  {
-   "fieldname": "floor_unit_new",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Floor Unit Name",
-   "unique": 1
   },
   {
    "fetch_from": "floor.wh_name",
@@ -167,19 +124,91 @@
    "fieldtype": "Link",
    "label": "Tenant / Lessee",
    "mandatory_depends_on": "rent_space",
-   "options": "Customer"
+   "no_copy": 1,
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "free_space",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Free Space",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "{floor_unit_name}",
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Title",
+   "no_copy": 1
+  },
+  {
+   "fieldname": "floor_unit_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Floor Unit Name"
+  },
+  {
+   "fieldname": "section_break_btko",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zmzn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": ".{floor_unit_name}.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Naming Series",
+   "options": ".{floor_unit_name}.-",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "ref_doc",
+   "fieldtype": "Link",
+   "label": "Reference Document",
+   "options": "Stock Entry"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-09-03 00:16:25.118923",
+ "links": [
+  {
+   "link_doctype": "Stock Entry Detail",
+   "link_fieldname": "floor_unit"
+  }
+ ],
+ "modified": "2025-10-02 11:13:17.017500",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Floor Unit",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -193,8 +222,10 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "title",
  "track_changes": 1
 }

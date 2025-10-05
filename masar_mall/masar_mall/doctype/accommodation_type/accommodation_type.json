@@ -21,7 +21,7 @@
   },
   {
    "fieldname": "accommodation_name_ar",
-   "fieldtype": "Date",
+   "fieldtype": "Data",
    "label": "Accommodation Name Arabic"
   },
   {
@@ -44,7 +44,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-14 21:24:44.426127",
+ "modified": "2025-09-24 20:28:41.081457",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Accommodation Type",
@@ -64,6 +64,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
