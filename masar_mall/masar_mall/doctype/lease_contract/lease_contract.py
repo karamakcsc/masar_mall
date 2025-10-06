@@ -10,6 +10,7 @@ from masar_mall.utils.create_log import create_log, create_floor_unit_log
 
 class LeaseContract(Document):
     def on_submit(self):
+        frappe.set_value(self.doctype, self.name, "status", "Rent")
         self.create_lease_schedule()
         self.update_floor_unit()
         create_log(self)
@@ -113,6 +114,8 @@ class LeaseContract(Document):
         schedule.save(ignore_permissions=True)
         schedule.submit()
         self.status = "Rent"
+        # self.save()
+        frappe.db.commit()
         frappe.msgprint("Lease Contract Schedule has been created successfully.", alert=True, indicator="green")
 
 
