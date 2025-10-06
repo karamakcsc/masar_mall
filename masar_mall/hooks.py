@@ -252,7 +252,7 @@ fixtures = [
                 "Item-custom_rent_space",
                 "Customer-custom_tenant_designation",
                 "Customer-custom_general_contact",
-                "Customer-custom_represented_by,"
+                "Customer-custom_represented_by",
             ]
         ]
     ]}
