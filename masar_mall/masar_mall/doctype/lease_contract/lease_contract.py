@@ -14,7 +14,7 @@ class LeaseContract(Document):
         self.create_lease_schedule()
         self.update_floor_unit()
         create_log(self)
-        
+   #     
 
     def validate(self):
         self.validate_dates()
