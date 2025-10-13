@@ -65,7 +65,8 @@
    "allow_on_submit": 1,
    "fieldname": "status",
    "fieldtype": "Data",
-   "label": "Status"
+   "label": "Status",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_zrrg",
@@ -80,7 +81,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-02 10:29:13.965353",
+ "modified": "2025-10-12 13:00:44.963629",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Log",

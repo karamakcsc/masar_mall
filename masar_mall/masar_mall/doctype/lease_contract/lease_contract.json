@@ -412,7 +412,7 @@
    "fieldtype": "Select",
    "label": "Status",
    "no_copy": 1,
-   "options": "Draft\nRent\nTerminated\nRenewal",
+   "options": "Draft\nRent\nTerminated\nRenewal\nLegal Case",
    "read_only": 1
   },
   {
@@ -421,9 +421,9 @@
   },
   {
    "fieldname": "renewed_from",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Renewed From",
-   "no_copy": 1,
+   "options": "Lease Contract",
    "read_only": 1
   }
  ],
@@ -435,7 +435,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-06 12:24:44.836016",
+ "modified": "2025-10-12 13:58:04.091818",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",

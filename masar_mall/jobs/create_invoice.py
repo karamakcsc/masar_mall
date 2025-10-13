@@ -13,12 +13,15 @@ def check_lease_end_and_create_invoice():
             "status": "Rent",
             "docstatus": 1
         },
-        fields=["name"]
+        fields=["name", "lease_end"]
     )
     if not leases:
         frappe.throw("No active Lease Contracts found.")
 
     for lease in leases:
+        if lease.lease_end and today > getdate(lease.lease_end):
+            continue
+
         lease_doc = frappe.get_doc("Lease Contract", lease.name)
         
         schedules = frappe.get_all(

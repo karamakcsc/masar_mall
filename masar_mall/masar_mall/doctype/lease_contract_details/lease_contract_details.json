@@ -8,8 +8,10 @@
  "field_order": [
   "rent_amount_section",
   "rent_item",
+  "is_stock_item",
   "floor_unit",
   "area",
+  "service_percentage",
   "column_break_plzh",
   "rate",
   "amount",
@@ -53,6 +55,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Rate",
+   "read_only_depends_on": "eval: !doc.is_stock_item || doc.service_percentage",
    "reqd": 1
   },
   {
@@ -99,12 +102,29 @@
    "fieldtype": "Check",
    "label": "Rent Space",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "rent_item.is_stock_item",
+   "fetch_if_empty": 1,
+   "fieldname": "is_stock_item",
+   "fieldtype": "Check",
+   "label": "Is Stock Item",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "rent_item.custom_service_percentage",
+   "fetch_if_empty": 1,
+   "fieldname": "service_percentage",
+   "fieldtype": "Percent",
+   "label": "Service Percentage",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-25 11:10:45.969341",
+ "modified": "2025-10-13 14:14:56.149306",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Details",

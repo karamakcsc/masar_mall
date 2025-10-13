@@ -12,6 +12,12 @@
   "posting_date",
   "section_break_jsrw",
   "invoice",
+  "section_break_vdle",
+  "total_peroid",
+  "total_paid_peroid",
+  "column_break_zbvs",
+  "number_of_invoiced_periods",
+  "number_of_non_invoiced_periods",
   "section_break_djrt",
   "amended_from",
   "column_break_utfw",
@@ -77,12 +83,47 @@
   {
    "fieldname": "section_break_jsrw",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_vdle",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zbvs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "number_of_invoiced_periods",
+   "fieldtype": "Int",
+   "label": "Number of Invoiced Periods",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "number_of_non_invoiced_periods",
+   "fieldtype": "Int",
+   "label": "Number of Non Invoiced Periods",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_peroid",
+   "fieldtype": "Int",
+   "label": "Total  Peroid ",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_paid_peroid",
+   "fieldtype": "Int",
+   "label": "Total Paid Peroid",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-01 16:17:37.049030",
+ "modified": "2025-10-13 14:31:21.158610",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Schedule",

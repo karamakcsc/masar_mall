@@ -13,6 +13,8 @@ class LeaseContract(Document):
         frappe.set_value(self.doctype, self.name, "status", "Rent")
         self.create_lease_schedule()
         self.update_floor_unit()
+        if self.renewed_from:
+            self.renew_lease(self.renewed_from)
         create_log(self)
    #     
 
@@ -81,7 +83,17 @@ class LeaseContract(Document):
         start_date = getdate(self.lease_start)
         end_date = getdate(self.lease_end)
         allowance_months = int(getattr(self, 'allowance_period', 0) or 0)
-        billing_interval = int(getattr(self, 'billing_frequency', 1))
+        # billing_interval = 1
+        # frappe.throw(str(getattr(self, 'billing_frequency', 1)))
+        pay_type_map = {
+            "1 month": 1,
+            "2 month": 2,
+            "3 month": 3,
+            "6 month": 6,
+            "1 year": 12
+        }
+        billing_frequency = getattr(self, 'billing_frequency', '') or ''
+        billing_interval = pay_type_map.get(billing_frequency, 1)
         total_rent = flt(getattr(self, 'total_rent_amount', 0))
         total_months = int(getattr(self, 'period_in_months', 0))
         
@@ -111,6 +123,9 @@ class LeaseContract(Document):
             free_start = add_months(end_date, 1)
             self.add_free_months(schedule, free_start, allowance_months)
         
+        # Save the total period (in months) to the schedule's total_peroid field
+        schedule.total_peroid = total_months
+
         schedule.save(ignore_permissions=True)
         schedule.submit()
         self.status = "Rent"
@@ -234,12 +249,16 @@ class LeaseContract(Document):
             frappe.msgprint("Lease contract terminated successfully.", alert=True, indicator="orange")
     
     @frappe.whitelist()
-    def renew_lease(self):
-        frappe.db.set_value(self.doctype, self.name, "status", "Renewal")
+    def renew_lease(self, renewal_self):
+        renewal_doc = frappe.get_doc("Lease Contract", renewal_self)
+        frappe.db.set_value(renewal_doc.doctype, renewal_doc.name, "status", "Renewal")
         frappe.db.commit()
-        
-        self.reload()
-        
-        create_log(self)
+        renewal_doc.reload()
+        create_log(renewal_doc)
         
         frappe.msgprint("Contract marked for renewal.", alert=True, indicator="blue")
+
+    @frappe.whitelist()
+    def legal_case(self):
+        frappe.db.set_value(self.doctype, self.name, "status", "Legal Case")
+        frappe.db.commit()

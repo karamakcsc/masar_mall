@@ -1,17 +1,16 @@
 import frappe
 from frappe.utils import getdate, nowdate
 
-
-
 def update_lease_schedule_status_from_invoice():
-    """Update Lease Contract Schedule child table with status from Sales Invoice if invoice date <= today"""
+    """Update Lease Contract Schedule child table with status from Sales Invoice using Python dicts"""
+    
     today = getdate(nowdate())
 
-    # Only use fields that exist in Sales Invoice
+    # Step 1: Fetch all Sales Invoices at once
     invoices = frappe.get_all(
         "Sales Invoice",
         filters={"posting_date": ["<=", today]},
-        fields=["name", "status"],  # Removed 'lease_contract'
+        fields=["name", "status"],
         ignore_permissions=True
     )
 
@@ -19,24 +18,45 @@ def update_lease_schedule_status_from_invoice():
         frappe.logger().info("No Sales Invoices found for today or earlier.")
         return
 
-    for inv in invoices:
-        # Find all Lease Contract Schedules where any child row has invoice_number == inv.name
-        schedules = frappe.get_all(
-            "Lease Contract Schedule",
-            filters=[{"docstatus": 1}],  # Only submitted schedules
-            fields=["name"]
-        )
+    # Convert invoices list into a dictionary for quick lookup
+    invoice_dict = {inv['name']: inv['status'] for inv in invoices}
 
-        for sched in schedules:
-            schedule_doc = frappe.get_doc("Lease Contract Schedule", sched.name)
-            updated = False
-            for row in schedule_doc.invoice:
-                if getattr(row, "invoice_number", None) == inv.name:
-                    row.invoice_status = inv.status
-                    updated = True
-            if updated:
-                schedule_doc.save(ignore_permissions=True)
-                frappe.logger().info(f"Updated status for schedule {sched.name} from invoice {inv.name}")
+    # Step 2: Fetch all Lease Contract Schedules with their invoice child tables
+    schedules = frappe.get_all(
+        "Lease Contract Schedule",
+        filters={"docstatus": 1},
+        fields=["name"],
+        ignore_permissions=True
+    )
 
+    # Load all schedules into memory
+    for sched in schedules:
+        schedule_doc = frappe.get_doc("Lease Contract Schedule", sched.name)
+        invoiced = 0
+        not_invoiced = 0
+        paid_periods = 0
+        updated = False
 
+        # Update invoice_status in memory
+        for row in schedule_doc.invoice:
+            invoice_number = getattr(row, "invoice_number", None)
+            if invoice_number and invoice_number in invoice_dict:
+                row.invoice_status = invoice_dict[invoice_number]
+                updated = True
 
+            if row.invoice_number:
+                invoiced += 1
+                if row.invoice_status == "Paid":
+                    paid_periods += 1
+            else:
+                not_invoiced += 1
+
+        # Update totals
+        schedule_doc.number_of_invoiced_periods = invoiced
+        schedule_doc.number_of_non_invoiced_periods = not_invoiced
+        schedule_doc.total_paid_peroid = paid_periods
+
+        # Save only if there are changes
+        if updated:
+            schedule_doc.save(ignore_permissions=True)
+            frappe.logger().info(f"Updated status for schedule {sched.name}")
