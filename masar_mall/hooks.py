@@ -253,6 +253,7 @@ fixtures = [
                 "Customer-custom_tenant_designation",
                 "Customer-custom_general_contact",
                 "Customer-custom_represented_by",
+                "Item-custom_service_percentage"
             ]
         ]
     ]}
