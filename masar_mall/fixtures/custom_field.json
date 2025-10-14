@@ -178,7 +178,7 @@
   "collapsible_depends_on": null,
   "columns": 0,
   "default": "0",
-  "depends_on": null,
+  "depends_on": "eval: doc.is_stock_item && doc.item_group == 'Rent Space';",
   "description": null,
   "docstatus": 0,
   "doctype": "Custom Field",

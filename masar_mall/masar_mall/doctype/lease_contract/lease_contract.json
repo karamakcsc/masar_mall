@@ -56,6 +56,8 @@
   "column_break_ckoi",
   "in_period",
   "out_period",
+  "section_break_iica",
+  "rent_schedule",
   "section_break_xerq",
   "naming_series",
   "more_info_tab",
@@ -425,6 +427,15 @@
    "label": "Renewed From",
    "options": "Lease Contract",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_iica",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rent_schedule",
+   "fieldtype": "HTML",
+   "label": "Rent  Schedule"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -435,7 +446,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-12 13:58:04.091818",
+ "modified": "2025-10-14 12:27:40.989381",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",
