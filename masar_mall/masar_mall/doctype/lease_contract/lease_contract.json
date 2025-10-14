@@ -47,9 +47,9 @@
   "lease_end",
   "billing_frequency",
   "column_break_tbiq",
+  "contract_date",
   "period_in_months",
   "tax_template",
-  "include_vat",
   "section_break_oqrs",
   "allowance_period",
   "allowance_note",
@@ -197,12 +197,6 @@
    "fieldname": "in_period",
    "fieldtype": "Check",
    "label": "Inside the Billing Period"
-  },
-  {
-   "default": "0",
-   "fieldname": "include_vat",
-   "fieldtype": "Check",
-   "label": "Included Vat"
   },
   {
    "fieldname": "tax_template",
@@ -436,6 +430,11 @@
    "fieldname": "rent_schedule",
    "fieldtype": "HTML",
    "label": "Rent  Schedule"
+  },
+  {
+   "fieldname": "contract_date",
+   "fieldtype": "Date",
+   "label": "Contract Date"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -446,7 +445,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-14 12:27:40.989381",
+ "modified": "2025-10-14 13:40:35.688538",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",

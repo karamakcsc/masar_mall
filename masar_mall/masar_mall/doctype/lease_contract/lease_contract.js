@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('Lease Contract', {
     refresh: function (frm) {
+        filter_tax(frm);
         create_custom_buttons(frm);
         filter_rent_details(frm);
         calculate_totals(frm);
@@ -17,16 +18,22 @@ frappe.ui.form.on('Lease Contract', {
     },
 
     setup: function (frm) {
+        filter_tax(frm);
         filter_floor(frm);
     },
 
     onload: function (frm) {
+        filter_tax(frm);
         filter_rent_details(frm);
     },
 
     property: function (frm) {
         filter_rent_details(frm);
         frm.refresh_field("floor");
+    },
+
+    owner_lessor: function (frm) {
+        filter_tax(frm);
     }
 });
 
@@ -193,6 +200,21 @@ function filter_floor(frm) {
     });
 }
 
+function filter_tax(frm) {
+    frm.set_query("tax_template", function () {
+        if (!frm.doc.owner_lessor) {
+            frappe.msgprint(__('Please select a Company first.'));
+            return { filters: { name: "" } };
+        }
+
+        return {
+            filters: {
+                company: frm.doc.owner_lessor,
+            }
+        };
+    });
+}
+
 function create_custom_buttons(frm) {
     if (frm.doc.docstatus === 1 && frm.doc.status === "Rent") {
 
@@ -249,3 +271,4 @@ function create_custom_buttons(frm) {
         }, __("Manage"));
     }
 }
+

@@ -27,7 +27,6 @@
    "label": "Rent Amount"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "floor_unit",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -50,12 +49,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "rate",
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Rate",
-   "read_only_depends_on": "eval: !doc.is_stock_item || doc.service_percentage",
+   "read_only_depends_on": "eval: !doc.is_stock_item && doc.service_percentage",
    "reqd": 1
   },
   {
@@ -124,7 +122,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-13 14:14:56.149306",
+ "modified": "2025-10-14 13:46:21.538779",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Details",
