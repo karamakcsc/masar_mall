@@ -31,6 +31,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Floor Unit",
+   "link_filters": "[[\"Floor Unit\",\"rent_space\",\"=\",0]]",
    "mandatory_depends_on": "eval: doc.rent_space== 1",
    "options": "Floor Unit",
    "read_only_depends_on": "eval: doc.rent_space== 0"
@@ -122,7 +123,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-14 13:46:21.538779",
+ "modified": "2025-10-14 13:56:18.696300",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract Details",
