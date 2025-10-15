@@ -434,7 +434,8 @@
   {
    "fieldname": "contract_date",
    "fieldtype": "Date",
-   "label": "Contract Date"
+   "label": "Contract Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -445,7 +446,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-14 13:40:35.688538",
+ "modified": "2025-10-15 11:02:24.930418",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",

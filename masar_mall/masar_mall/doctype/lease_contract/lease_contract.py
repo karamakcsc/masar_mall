@@ -92,9 +92,7 @@ class LeaseContract(Document):
         billing_interval = pay_type_map.get(billing_frequency, 1)
         total_rent = flt(getattr(self, 'total_rent_amount', 0))
         total_months = int(getattr(self, 'period_in_months', 0))
-        
-        tax_status = self.get_tax_status()
-        
+                
         monthly_rent = total_rent / total_months if total_months > 0 else 0
         
         if getattr(self, 'in_period', False):
@@ -111,7 +109,7 @@ class LeaseContract(Document):
             paid_months = total_months
             paid_end = end_date
         
-        self.add_paid_invoices(schedule, paid_start, paid_end, paid_months, billing_interval, monthly_rent, tax_status)
+        self.add_paid_invoices(schedule, paid_start, paid_end, paid_months, billing_interval, monthly_rent)
         
         if getattr(self, 'out_period', False) and allowance_months > 0:
             free_start = add_months(end_date, 1)
@@ -124,20 +122,6 @@ class LeaseContract(Document):
         frappe.db.commit()
         frappe.msgprint("Lease Contract Schedule has been created successfully.", alert=True, indicator="green")
 
-    def get_tax_status(self):
-        if not getattr(self, "include_vat", False):
-            return "Exempt"
-        
-        if not getattr(self, "tax_template", None):
-            return "Exempt"
-        
-        try:
-            tax_doc = frappe.get_doc("Sales Taxes and Charges Template", self.tax_template)
-            return "Taxable" if getattr(tax_doc, "taxes", None) else "Exempt"
-        except Exception:
-            frappe.log_error(frappe.get_traceback(), "Failed to get tax template")
-            return "Exempt"
-
     def add_free_months(self, schedule, start_date, num_months):
         current_date = start_date
         
@@ -149,14 +133,12 @@ class LeaseContract(Document):
                 "lease_start": period_start,
                 "lease_end": period_end,
                 "amount": 0,
-                "rate": 0,
-                "tax": "Exempt",
                 "is_allowance": 1
             })
             
             current_date = add_months(current_date, 1)
 
-    def add_paid_invoices(self, schedule, start_date, end_date, total_months, billing_interval, monthly_rent, tax_status):
+    def add_paid_invoices(self, schedule, start_date, end_date, total_months, billing_interval, monthly_rent):
         if total_months <= 0:
             return
         
@@ -178,8 +160,6 @@ class LeaseContract(Document):
                 "lease_start": period_start,
                 "lease_end": period_end,
                 "amount": invoice_amount,
-                "rate": 0,
-                "tax": tax_status,
                 "is_allowance": 0
             })
             
@@ -212,54 +192,6 @@ class LeaseContract(Document):
                     except Exception as e:
                         frappe.throw(f"Error Logging Floor Unit: {e}")
             frappe.db.commit()
-
-    # def update_rent_schedule_html(self):
-    #     """Generate HTML table showing monthly and total accumulated rent."""
-    #     if not self.lease_start or not self.lease_end or not self.total_rent_amount:
-    #         return "<p style='color:red;'>Missing lease start, end date, or total rent amount.</p>"
-
-    #     start_date = getdate(self.lease_start)
-    #     end_date = getdate(self.lease_end)
-
-    #     delta = relativedelta(end_date, start_date)
-    #     total_months = delta.years * 12 + delta.months + (1 if delta.days > 0 else 0)
-    #     if total_months <= 0:
-    #         return "<p style='color:red;'>Invalid lease period.</p>"
-
-    #     monthly_rent = flt(self.total_rent_amount) / total_months
-    #     total_accumulated = 0
-
-    #     html = """
-    #     <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width:100%;">
-    #         <tr style="background-color:#f2f2f2; text-align:center;">
-    #             <th>Month #</th>
-    #             <th>Month Start</th>
-    #             <th>Month End</th>
-    #             <th>Monthly Rent</th>
-    #             <th>Total Accumulated</th>
-    #         </tr>
-    #     """
-
-    #     current_date = start_date
-    #     for i in range(1, total_months + 1):
-    #         month_start = current_date
-    #         month_end = get_last_day(month_start)
-    #         total_accumulated += monthly_rent
-
-    #         html += f"""
-    #         <tr style="text-align:center;">
-    #             <td>{i}</td>
-    #             <td>{month_start.strftime('%Y-%m-%d')}</td>
-    #             <td>{month_end.strftime('%Y-%m-%d')}</td>
-    #             <td>{monthly_rent:,.2f}</td>
-    #             <td>{total_accumulated:,.2f}</td>
-    #         </tr>
-    #         """
-
-    #         current_date = add_months(current_date, 1)
-
-    #     html += "</table>"
-    #     return html
 
     @frappe.whitelist()        
     def terminate_lease(self):

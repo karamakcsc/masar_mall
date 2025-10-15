@@ -450,8 +450,8 @@ function generate_rent_schedule_html(frm) {
                         <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width:100%;">
                             <tr style="background-color:#f2f2f2; text-align:center;">
                                 <th>Row #</th>
-                                <th>Period Start</th>
-                                <th>Period End</th>
+                                <th>Month Start</th>
+                                <th>Month End</th>
                                 <th>Amount</th>
                                 <th>Total Accumulated</th>
                             </tr>`;
