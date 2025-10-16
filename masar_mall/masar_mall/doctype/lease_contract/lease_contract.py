@@ -82,11 +82,11 @@ class LeaseContract(Document):
         allowance_months = int(getattr(self, 'allowance_period', 0) or 0)
 
         pay_type_map = {
-            "1 month": 1,
-            "2 month": 2,
-            "3 month": 3,
-            "6 month": 6,
-            "1 year": 12
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "6": 6,
+            "12": 12
         }
         billing_frequency = getattr(self, 'billing_frequency', '') or ''
         billing_interval = pay_type_map.get(billing_frequency, 1)

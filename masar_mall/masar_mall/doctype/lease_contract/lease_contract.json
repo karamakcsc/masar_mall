@@ -23,7 +23,7 @@
   "mobile",
   "column_break_nggj",
   "designation",
-  "tenant_designation",
+  "business_purpose",
   "ref_no",
   "tenant_address",
   "premises_section",
@@ -261,12 +261,6 @@
    "label": "Customer Type"
   },
   {
-   "fetch_from": "tenant_lessee.custom_tenant_designation",
-   "fieldname": "tenant_designation",
-   "fieldtype": "Data",
-   "label": "Tenant Designation"
-  },
-  {
    "fieldname": "more_info_tab",
    "fieldtype": "Tab Break",
    "label": "More Info"
@@ -436,6 +430,13 @@
    "fieldtype": "Date",
    "label": "Contract Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "business_purpose",
+   "fieldtype": "Link",
+   "label": "Business Purpose",
+   "link_filters": "[[\"Business Purpose\",\"enabled\",\"=\",1]]",
+   "options": "Business Purpose"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -446,7 +447,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-15 11:02:24.930418",
+ "modified": "2025-10-16 15:11:13.200822",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",

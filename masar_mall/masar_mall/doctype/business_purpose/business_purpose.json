@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:business_purpose",
+ "creation": "2025-10-16 14:51:35.778025",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "business_purpose",
+  "enabled",
+  "column_break_qlxa",
+  "business_purpose_arabic"
+ ],
+ "fields": [
+  {
+   "fieldname": "business_purpose",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Business Purpose",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "business_purpose_arabic",
+   "fieldtype": "Data",
+   "label": "Business Purpose Arabic"
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "column_break_qlxa",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-16 15:12:51.470450",
+ "modified_by": "Administrator",
+ "module": "Masar Mall",
+ "name": "Business Purpose",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
