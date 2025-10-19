@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.utils import getdate, nowdate
+from frappe.utils import getdate, nowdate, flt
 
 def check_lease_end_and_create_invoice():
     today = getdate(nowdate())
@@ -23,7 +23,7 @@ def check_lease_end_and_create_invoice():
             continue
 
         lease_doc = frappe.get_doc("Lease Contract", lease.name)
-        
+        company_doc = frappe.get_doc("Company", lease_doc.owner_lessor)
         schedules = frappe.get_all(
             "Lease Contract Schedule",
             filters={"lease_contract": lease_doc.name, "docstatus": 1},
@@ -48,6 +48,52 @@ def check_lease_end_and_create_invoice():
                     continue
                 
                 create_individual_invoice(lease_doc, row, schedule_doc)
+                
+        if lease_doc.other_service:
+            for service in lease_doc.other_service:
+                if service.invoice_number:
+                    continue
+                if service.invoice_date and service.invoice_date <= today:
+                    invoice = frappe.new_doc("Sales Invoice")
+                    invoice.customer = lease_doc.tenant_lessee
+                    posting_date = service.invoice_date
+                    due_date = service.invoice_date
+                    invoice.set_posting_time = 1
+                    invoice.posting_date = str(posting_date)
+                    invoice.due_date = str(due_date)
+                    invoice.custom_lease_contract = lease_doc.name
+                    invoice.debit_to = company_doc.default_receivable_account if company_doc.default_receivable_account else frappe.throw(f"Please set Default Receivable Account in Company Settings")
+                    item_doc = frappe.get_doc("Item", service.service_item)
+
+                    invoice.append("items", {
+                        "item_code": service.service_item,
+                        "item_name": service.item_name or item_doc.item_name,
+                        "item_group": item_doc.item_group,
+                        "qty": 1,
+                        "rate": service.rate,
+                        "amount": service.amount,
+                        "uom": item_doc.stock_uom,
+                        "income_account": (
+                            company_doc.default_income_account
+                            if company_doc.default_income_account
+                            else frappe.throw("Please set Default Income Account in Company Settings")
+                        ),
+                        "enable_deferred_revenue": 1 if posting_date != due_date else 0,
+                        "service_start_date": posting_date,
+                        "service_end_date": due_date,
+                    })
+
+                    if item_doc.taxes:
+                        item_tax_template = item_doc.taxes[0].item_tax_template
+                        if item_tax_template:
+                            invoice.taxes_and_charges = item_tax_template
+                            invoice.run_method("set_taxes")
+
+                    invoice.insert(ignore_permissions=True)
+                    invoice.submit()
+                    service.invoice_number = invoice.name
+                    service.db_update()
+                
 
 def create_individual_invoice(lease_doc, payment_row, schedule_doc):
     try:
@@ -76,22 +122,32 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         
         if not item_codes:
             frappe.throw(f"No items found in Lease Contract {lease_doc.name} to create invoice.")
-            
+        total_months = flt(getattr(lease_doc, 'period_in_months', 0)) / flt(getattr(lease_doc, 'billing_frequency', 1))
         for item in item_codes:
+            item_doc = frappe.get_doc("Item", item.rent_item)
             invoice.append("items", {
                 "item_code": item.rent_item,
-                "item_name": frappe.get_value("Item", item.item_code, "item_name"),
-                "item_group": frappe.get_value("Item", item.item_code, "item_group"),
+                "item_name": item_doc.item_name,
+                "item_group": item_doc.item_group,
                 # "description": f"Lease payment for {payment_row.lease_start} to {payment_row.lease_end}",
                 "qty": 1,
-                "rate": item.amount,
+                "rate": item.amount/total_months,
                 "amount": item.amount,
-                "uom": frappe.get_value("Item", item.item_code, "stock_uom"),
+                "uom": item_doc.stock_uom,
                 "income_account": company_doc.default_income_account if company_doc.default_income_account else frappe.throw(f"Please set Default Income Account in Company Settings"),
                 "enable_deferred_revenue": 1,
                 "service_start_date": posting_date,
                 "service_end_date": due_date,
             })
+            
+            item_tax_template = None
+            item_tax = item_doc.taxes
+            if item_tax:
+                item_tax_template = item_tax[0].item_tax_template
+            if item_tax_template:
+                invoice.taxes_and_charges = item_tax_template
+                invoice.run_method("set_taxes")
+
 
         invoice.insert(ignore_permissions=True)
         invoice.submit()
@@ -101,8 +157,6 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         payment_row.invoice_number = invoice.name
         payment_row.invoice_status = invoice.status
         schedule_doc.save(ignore_permissions=True)
-
-        frappe.msgprint(f"Updated schedule row with invoice {invoice.name}", alert=True, indicator="green")
 
     except Exception as e:
         frappe.throw(f"Failed to create invoice for payment period: {str(e)}")

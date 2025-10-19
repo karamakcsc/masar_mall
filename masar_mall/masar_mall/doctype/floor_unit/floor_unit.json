@@ -186,10 +186,12 @@
    "show_dashboard": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "ref_doc",
    "fieldtype": "Link",
    "label": "Reference Document",
-   "options": "Stock Entry"
+   "options": "Stock Entry",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -200,7 +202,7 @@
    "link_fieldname": "floor_unit"
   }
  ],
- "modified": "2025-10-02 11:13:17.017500",
+ "modified": "2025-10-19 13:16:21.067618",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Floor Unit",

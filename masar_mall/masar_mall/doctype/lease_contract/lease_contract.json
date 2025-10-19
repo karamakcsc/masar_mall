@@ -40,6 +40,12 @@
   "total_rent_elements",
   "column_break_hgzc",
   "total_rent_amount",
+  "section_break_fpxg",
+  "other_service",
+  "section_break_qmpj",
+  "total_quantity",
+  "column_break_hacb",
+  "total_service",
   "terms_section",
   "lease_start",
   "occupation_date",
@@ -369,6 +375,7 @@
    "label": "Contract Status"
   },
   {
+   "default": "1",
    "description": "Select the billing interval in months to determine how often invoices will be generated (e.g., 1 = monthly, 3 = quarterly, 12 = yearly)",
    "fieldname": "billing_frequency",
    "fieldtype": "Select",
@@ -437,6 +444,34 @@
    "label": "Business Purpose",
    "link_filters": "[[\"Business Purpose\",\"enabled\",\"=\",1]]",
    "options": "Business Purpose"
+  },
+  {
+   "fieldname": "section_break_fpxg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "other_service",
+   "fieldtype": "Table",
+   "label": "Other Service",
+   "options": "Other Services Details"
+  },
+  {
+   "fieldname": "section_break_qmpj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_quantity",
+   "fieldtype": "Int",
+   "label": "Total Quantity"
+  },
+  {
+   "fieldname": "column_break_hacb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_service",
+   "fieldtype": "Float",
+   "label": "Total Service"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -447,7 +482,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-16 15:11:13.200822",
+ "modified": "2025-10-16 16:47:16.545037",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",

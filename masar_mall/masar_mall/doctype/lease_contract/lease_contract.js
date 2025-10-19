@@ -9,18 +9,16 @@ frappe.ui.form.on('Lease Contract', {
         calculate_totals(frm);
        frm.set_df_property("rent_schedule", "options", generate_rent_schedule_html(frm));
        frm.refresh_field("rent_schedule");
-        
     },
 
     validate: function (frm) {
         calculate_totals(frm);
-            
-            frm.set_df_property("rent_schedule", "options", generate_rent_schedule_html(frm));
-            frm.refresh_field("rent_schedule");
-        
+        totalQuantityAndService(frm);
+        frm.set_df_property("rent_schedule", "options", generate_rent_schedule_html(frm));
+        frm.refresh_field("rent_schedule");
     },
 
-    rent_details: function (frm, cdt, cdn) {
+    rent_details: function (frm) {
         calculate_totals(frm);
     },
 
@@ -66,12 +64,38 @@ frappe.ui.form.on('Lease Contract Details', {
     }
 });
 
+frappe.ui.form.on('Other Services Details', {
+    service_item: function (frm, cdt, cdn) {
+        calculate_other_service_rate(frm, cdt, cdn);
+    },
+});
+
+function calculate_other_service_rate(frm, cdt, cdn) {
+    const child = locals[cdt][cdn];
+
+    const service_percentage = flt(child.service_percentage);
+    let amount = 0;
+    if (frm.doc.total_rent_amount) {
+        if (service_percentage > 0) {
+            const total_stock_amount = frm.doc.total_rent_amount;
+            amount = (service_percentage / 100) * total_stock_amount;
+        } else {
+            amount = flt(child.rate);
+        }
+    } else {
+        amount = flt(child.rate);
+    }
+
+    frappe.model.set_value(cdt, cdn, "rate", amount);
+    frappe.model.set_value(cdt, cdn, "amount", amount);
+}
+
 function calculate_row_amount(frm, cdt, cdn) {
     const child = locals[cdt][cdn];
     if (!child.rent_item) return;
 
     const is_stock_item = child.is_stock_item;
-    const service_percentage = flt(child.custom_service_percentage);
+    const service_percentage = flt(child.service_percentage);
     let amount = 0;
 
     if (is_stock_item) {
@@ -103,8 +127,8 @@ function recalculate_service_items(frm) {
     const total_stock_amount = get_total_stock_amount(frm);
 
     (frm.doc.rent_details || []).forEach(row => {
-        if (!row.is_stock_item && flt(row.custom_service_percentage) > 0) {
-            const new_amount = (flt(row.custom_service_percentage) / 100) * total_stock_amount;
+        if (!row.is_stock_item && flt(row.service_percentage) > 0) {
+            const new_amount = (flt(row.service_percentage) / 100) * total_stock_amount;
             frappe.model.set_value(row.doctype, row.name, "rate", new_amount);
             frappe.model.set_value(row.doctype, row.name, "amount", new_amount);
         }
@@ -494,4 +518,22 @@ function generate_rent_schedule_html(frm) {
             });
         }
     });
+}
+
+function totalQuantityAndService(frm){
+    let total_qty = 0;
+    let total_service = 0;
+
+    (frm.doc.other_service || []).forEach(row => {
+        const amt = flt(row.rate || 0);
+        // make rate equal to amount
+        frappe.model.set_value(row.doctype, row.name, 'amount', amt);
+
+        total_qty += 1;
+        total_service += amt;
+    });
+
+    frm.set_value('total_quantity', total_qty);
+    frm.set_value('total_service', total_service);
+    frm.refresh_field('other_service');
 }
