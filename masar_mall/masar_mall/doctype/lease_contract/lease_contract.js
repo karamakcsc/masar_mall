@@ -74,10 +74,18 @@ function calculate_other_service_rate(frm, cdt, cdn) {
     const child = locals[cdt][cdn];
 
     const service_percentage = flt(child.service_percentage);
+    if (frm.doc.rent_details) {
+        var stock_amount = 0;
+        frm.doc.rent_details.forEach(row => {
+            if (row.is_stock_item) {
+                stock_amount += flt(row.amount);
+            }
+        });
+    }
     let amount = 0;
-    if (frm.doc.total_rent_amount) {
+    if (stock_amount > 0) {
         if (service_percentage > 0) {
-            const total_stock_amount = frm.doc.total_rent_amount;
+            const total_stock_amount = stock_amount;
             amount = (service_percentage / 100) * total_stock_amount;
         } else {
             amount = flt(child.rate);
