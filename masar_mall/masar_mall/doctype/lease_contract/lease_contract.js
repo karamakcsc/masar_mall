@@ -61,42 +61,24 @@ frappe.ui.form.on('Lease Contract Details', {
 
     rent_details_remove: function (frm) {
         calculate_totals(frm);
-    }
-});
-
-frappe.ui.form.on('Other Services Details', {
-    service_item: function (frm, cdt, cdn) {
-        calculate_other_service_rate(frm, cdt, cdn);
     },
+   
 });
 
-function calculate_other_service_rate(frm, cdt, cdn) {
-    const child = locals[cdt][cdn];
-
-    const service_percentage = flt(child.service_percentage);
-    if (frm.doc.rent_details) {
-        var stock_amount = 0;
-        frm.doc.rent_details.forEach(row => {
-            if (row.is_stock_item) {
-                stock_amount += flt(row.amount);
-            }
-        });
+frappe.ui.form.on("Lease Contract Period Details", {
+    from_date: function (frm, cdt, cdn) {
+        calculate_period(frm, cdt, cdn);
+    },
+    to_date: function (frm, cdt, cdn) {
+        calculate_period(frm, cdt, cdn);
+    },
+    space_amount: function (frm, cdt, cdn) {
+        calc_amount(frm, cdt, cdn);
+    },
+    service_amount: function (frm, cdt, cdn) {
+        calc_amount(frm, cdt, cdn);
     }
-    let amount = 0;
-    if (stock_amount > 0) {
-        if (service_percentage > 0) {
-            const total_stock_amount = stock_amount;
-            amount = (service_percentage / 100) * total_stock_amount;
-        } else {
-            amount = flt(child.rate);
-        }
-    } else {
-        amount = flt(child.rate);
-    }
-
-    frappe.model.set_value(cdt, cdn, "rate", amount);
-    frappe.model.set_value(cdt, cdn, "amount", amount);
-}
+});
 
 function calculate_row_amount(frm, cdt, cdn) {
     const child = locals[cdt][cdn];
@@ -544,4 +526,26 @@ function totalQuantityAndService(frm){
     frm.set_value('total_quantity', total_qty);
     frm.set_value('total_service', total_service);
     frm.refresh_field('other_service');
+}
+
+function calculate_period(frm, cdt, cdn) {
+    var child = locals[cdt][cdn];
+    if (child.from_date && child.to_date) {
+        const start = new Date(child.from_date);
+        const end = new Date(child.to_date);
+        const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1;
+        frappe.model.set_value(cdt, cdn, "month_in_period", months);
+    } else {
+        frappe.model.set_value(cdt, cdn, "month_in_period", 0);
+    }
+}
+
+function calc_amount(frm, cdt, cdn) {
+    var child = locals[cdt][cdn];
+    if (child.space_amount && child.service_amount) {
+        const amount = flt(child.space_amount) + flt(child.service_amount);
+        frappe.model.set_value(cdt, cdn, "amount", amount);
+    } else {
+        frappe.model.set_value(cdt, cdn, "amount", 0);
+    }
 }

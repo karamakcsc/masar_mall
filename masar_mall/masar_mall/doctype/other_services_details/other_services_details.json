@@ -9,7 +9,6 @@
   "service_item",
   "item_name",
   "rate",
-  "amount",
   "invoice_date",
   "invoice_number",
   "service_percentage"
@@ -38,13 +37,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "amount",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Amount",
-   "read_only": 1
-  },
-  {
    "fieldname": "invoice_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -71,7 +63,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-19 13:25:10.371390",
+ "modified": "2025-10-26 16:12:53.516170",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Other Services Details",

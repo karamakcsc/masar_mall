@@ -47,7 +47,10 @@ def check_lease_end_and_create_invoice():
                 if row_start_date > today:
                     continue
                 
-                create_individual_invoice(lease_doc, row, schedule_doc)
+                if not lease_doc.contract_multi_period:
+                    create_individual_invoice(lease_doc, row, schedule_doc)
+                elif lease_doc.contract_multi_period:
+                    create_multi_period_invoices(lease_doc, row, schedule_doc)
                 
         if lease_doc.other_service:
             for service in lease_doc.other_service:
@@ -71,7 +74,7 @@ def check_lease_end_and_create_invoice():
                         "item_group": item_doc.item_group,
                         "qty": 1,
                         "rate": service.rate,
-                        "amount": service.amount,
+                        "amount": service.rate,
                         "uom": item_doc.stock_uom,
                         "income_account": (
                             company_doc.default_income_account
@@ -118,27 +121,30 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
                 "parent": lease_doc.name,
             },
             fields=["rent_item", "amount"]
-        )
-        
+        )                
+         
         if not item_codes:
             frappe.throw(f"No items found in Lease Contract {lease_doc.name} to create invoice.")
+
         total_months = flt(getattr(lease_doc, 'period_in_months', 0)) / flt(getattr(lease_doc, 'billing_frequency', 1))
+        if not lease_doc.contract_multi_period:
+            if lease_doc.allowance_period and lease_doc.in_period:
+                total_months -= lease_doc.allowance_period
         for item in item_codes:
             item_doc = frappe.get_doc("Item", item.rent_item)
-            invoice.append("items", {
-                "item_code": item.rent_item,
-                "item_name": item_doc.item_name,
-                "item_group": item_doc.item_group,
-                # "description": f"Lease payment for {payment_row.lease_start} to {payment_row.lease_end}",
-                "qty": 1,
-                "rate": item.amount/total_months,
-                "amount": item.amount,
-                "uom": item_doc.stock_uom,
-                "income_account": company_doc.default_income_account if company_doc.default_income_account else frappe.throw(f"Please set Default Income Account in Company Settings"),
-                "enable_deferred_revenue": 1,
-                "service_start_date": posting_date,
-                "service_end_date": due_date,
-            })
+            if not lease_doc.contract_multi_period:
+                invoice.append("items", {
+                    "item_code": item.rent_item,
+                    "item_name": item_doc.item_name,
+                    "item_group": item_doc.item_group,
+                    "qty": 1,
+                    "rate": item.amount / total_months,
+                    "uom": item_doc.stock_uom,
+                    "income_account": company_doc.default_income_account if company_doc.default_income_account else frappe.throw(f"Please set Default Income Account in Company Settings"),
+                    "enable_deferred_revenue": 1,
+                    "service_start_date": posting_date,
+                    "service_end_date": due_date,
+                })
             
             item_tax_template = None
             item_tax = item_doc.taxes
@@ -147,7 +153,6 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
             if item_tax_template:
                 invoice.taxes_and_charges = item_tax_template
                 invoice.run_method("set_taxes")
-
 
         invoice.insert(ignore_permissions=True)
         invoice.submit()
@@ -160,3 +165,73 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
 
     except Exception as e:
         frappe.throw(f"Failed to create invoice for payment period: {str(e)}")
+        
+def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
+    try:
+        company_doc = frappe.get_doc("Company", lease_doc.owner_lessor)
+        if not lease_doc.tenant_lessee:
+            frappe.throw(f"Lease Contract {lease_doc.name} has no Tenant/Customer linked!")
+
+        invoice = frappe.new_doc("Sales Invoice")
+        invoice.customer = lease_doc.tenant_lessee
+
+        posting_date = payment_row.lease_start
+        due_date = payment_row.lease_end
+        invoice.set_posting_time = 1
+        invoice.posting_date = str(posting_date)
+        invoice.due_date = str(due_date)
+        invoice.custom_lease_contract = lease_doc.name
+        invoice.debit_to = company_doc.default_receivable_account or frappe.throw("Please set Default Receivable Account in Company Settings")
+
+        period = None
+        for p in lease_doc.period_details:
+            if getdate(p.from_date) <= getdate(posting_date) <= getdate(p.to_date):
+                period = p
+                break
+
+        if not period:
+            frappe.throw(f"No matching period detail found for posting date {posting_date} in Lease {lease_doc.name}")
+
+        period_months = flt(period.month_in_period)
+        if period_months <= 0:
+            frappe.throw("Invalid 'month_in_period' value in period details.")
+
+        if lease_doc.allowance_period and lease_doc.in_period and period == lease_doc.period_details[0]:
+            period_months -= lease_doc.allowance_period
+
+        service_rent_monthly = flt(period.service_amount) / period_months
+        space_rent_monthly = flt(period.space_amount) / period_months
+        
+        for rent_item in lease_doc.rent_details:
+            item_doc = frappe.get_doc("Item", rent_item.rent_item)
+            monthly_rate = space_rent_monthly if rent_item.is_stock_item else service_rent_monthly
+            invoice_rate = monthly_rate * flt(lease_doc.billing_frequency)
+
+            invoice.append("items", {
+                "item_code": rent_item.rent_item,
+                "item_name": item_doc.item_name,
+                "item_group": item_doc.item_group,
+                "qty": 1,
+                "rate": invoice_rate,
+                "uom": item_doc.stock_uom,
+                "income_account": company_doc.default_income_account or frappe.throw("Please set Default Income Account in Company Settings"),
+                "enable_deferred_revenue": 1,
+                "service_start_date": posting_date,
+                "service_end_date": due_date,
+            })
+
+            if item_doc.taxes:
+                item_tax_template = item_doc.taxes[0].item_tax_template
+                if item_tax_template:
+                    invoice.taxes_and_charges = item_tax_template
+                    invoice.run_method("set_taxes")
+
+        invoice.insert(ignore_permissions=True)
+        invoice.submit()
+
+        payment_row.invoice_number = invoice.name
+        payment_row.invoice_status = invoice.status
+        schedule_doc.save(ignore_permissions=True)
+
+    except Exception as e:
+        frappe.throw(f"Failed to create multi-period invoice: {str(e)}")

@@ -62,6 +62,9 @@
   "column_break_ckoi",
   "in_period",
   "out_period",
+  "section_break_rilh",
+  "contract_multi_period",
+  "period_details",
   "section_break_iica",
   "rent_schedule",
   "section_break_xerq",
@@ -472,6 +475,23 @@
    "fieldname": "total_service",
    "fieldtype": "Float",
    "label": "Total Service"
+  },
+  {
+   "default": "0",
+   "fieldname": "contract_multi_period",
+   "fieldtype": "Check",
+   "label": "Contract  Multi Period"
+  },
+  {
+   "fieldname": "section_break_rilh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: doc.contract_multi_period",
+   "fieldname": "period_details",
+   "fieldtype": "Table",
+   "label": "Period Details",
+   "options": "Lease Contract Period Details"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -482,7 +502,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-16 16:47:16.545037",
+ "modified": "2025-10-21 13:54:33.868948",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",
