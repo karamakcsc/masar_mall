@@ -38,10 +38,9 @@
    "allow_on_submit": 1,
    "columns": 2,
    "fieldname": "invoice_number",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Invoice Number",
-   "options": "Sales Invoice"
+   "label": "Invoice Number"
   },
   {
    "allow_on_submit": 1,
@@ -71,7 +70,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-24 15:10:46.329021",
+ "modified": "2025-10-28 15:03:07.733684",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contrant invoice",
