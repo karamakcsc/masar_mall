@@ -89,7 +89,7 @@ class LeaseContract(Document):
                     frappe.throw("The sum of months in period details must equal the total lease period in months.")
 
     def validate_rent_totals(self):
-        if self.rent_details and self.period_details:
+        if self.rent_details and self.period_details and self.contract_multi_period:
             rent_details_total = self.total_rent_amount
             period_details_total = sum(p.amount for p in self.period_details) 
             
