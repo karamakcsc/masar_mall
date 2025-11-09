@@ -261,7 +261,8 @@
    "fetch_from": "represented_by.designation",
    "fieldname": "designation",
    "fieldtype": "Data",
-   "label": "Designation"
+   "label": "Designation",
+   "read_only": 1
   },
   {
    "fetch_from": "tenant_lessee.customer_type",
@@ -442,11 +443,12 @@
    "reqd": 1
   },
   {
+   "fetch_from": "tenant_lessee.custom_business_purpose",
    "fieldname": "business_purpose",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "Business Purpose",
    "link_filters": "[[\"Business Purpose\",\"enabled\",\"=\",1]]",
-   "options": "Business Purpose"
+   "read_only": 1
   },
   {
    "fieldname": "section_break_fpxg",
@@ -502,7 +504,7 @@
    "link_fieldname": "lease_contract"
   }
  ],
- "modified": "2025-10-21 13:54:33.868948",
+ "modified": "2025-11-09 10:11:55.318390",
  "modified_by": "Administrator",
  "module": "Masar Mall",
  "name": "Lease Contract",

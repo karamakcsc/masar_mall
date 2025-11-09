@@ -250,10 +250,11 @@ fixtures = [
         [
             "name", "in", [
                 "Item-custom_rent_space",
-                "Customer-custom_tenant_designation",
+                # "Customer-custom_tenant_designation",
                 "Customer-custom_general_contact",
                 "Customer-custom_represented_by",
-                "Item-custom_service_percentage"
+                "Item-custom_service_percentage",
+                "Customer-custom_business_purpose"
             ]
         ]
     ]}
