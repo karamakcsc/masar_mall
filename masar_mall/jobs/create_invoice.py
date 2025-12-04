@@ -53,7 +53,6 @@ def check_lease_end_and_create_invoice():
                     create_multi_period_invoices(lease_doc, row, schedule_doc)
                 
         if lease_doc.other_service:
-            item_tax_templates = set()
             for service in lease_doc.other_service:
                 if service.invoice_number:
                     continue
@@ -88,20 +87,8 @@ def check_lease_end_and_create_invoice():
                         "service_start_date": posting_date,
                         "service_end_date": due_date,
                     })
-                    
-                    try:
-                        if getattr(item_doc, "taxes", None) and len(item_doc.taxes) > 0:
-                            tmpl = item_doc.taxes[0].get("item_tax_template") or None
-                            if tmpl:
-                                item_tax_templates.add(tmpl)
-                    except Exception:
-                        pass
 
-                    if len(item_tax_templates) == 1:
-                        invoice.taxes_and_charges = list(item_tax_templates)[0]
-                        invoice.run_method("set_taxes")
-                    else:
-                        invoice.taxes_and_charges = ""
+                    invoice.run_method("set_taxes")
 
                     invoice.insert(ignore_permissions=True)
                     invoice.submit()
@@ -141,7 +128,7 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         if not lease_doc.contract_multi_period:
             if lease_doc.allowance_period and lease_doc.in_period:
                 total_months = rounded(total_months - flt(lease_doc.allowance_period), 6)
-        item_tax_templates = set()
+        
         for item in item_codes:
             item_doc = frappe.get_doc("Item", item.rent_item)
             if not lease_doc.contract_multi_period:
@@ -160,20 +147,7 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
                     "service_end_date": due_date,
                 })
             
-            
-            try:
-                if getattr(item_doc, "taxes", None) and len(item_doc.taxes) > 0:
-                    tmpl = item_doc.taxes[0].get("item_tax_template") or None
-                    if tmpl:
-                        item_tax_templates.add(tmpl)
-            except Exception:
-                pass
-
-        if len(item_tax_templates) == 1:
-            invoice.taxes_and_charges = list(item_tax_templates)[0]
-            invoice.run_method("set_taxes")
-        else:
-            invoice.taxes_and_charges = ""
+        invoice.run_method("set_taxes")
 
         invoice.insert(ignore_permissions=True)
         invoice.submit()
@@ -189,7 +163,6 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         
 def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
     try:
-        item_tax_templates = set()
         company_doc = frappe.get_doc("Company", lease_doc.owner_lessor)
         if not lease_doc.tenant_lessee:
             frappe.throw(f"Lease Contract {lease_doc.name} has no Tenant/Customer linked!")
@@ -242,20 +215,7 @@ def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
                 "service_end_date": due_date,
             })
 
-            
-            try:
-                if getattr(item_doc, "taxes", None) and len(item_doc.taxes) > 0:
-                    tmpl = item_doc.taxes[0].get("item_tax_template") or None
-                    if tmpl:
-                        item_tax_templates.add(tmpl)
-            except Exception:
-                pass
-
-        if len(item_tax_templates) == 1:
-            invoice.taxes_and_charges = list(item_tax_templates)[0]
-            invoice.run_method("set_taxes")
-        else:
-            invoice.taxes_and_charges = ""
+        invoice.run_method("set_taxes")
 
         invoice.insert(ignore_permissions=True)
         invoice.submit()
