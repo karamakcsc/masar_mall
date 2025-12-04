@@ -88,9 +88,9 @@ def check_lease_end_and_create_invoice():
                         "service_end_date": due_date,
                     })
 
-                    invoice.run_method("set_taxes")
+                    # invoice.run_method("set_taxes")
 
-                    invoice.insert(ignore_permissions=True)
+                    invoice.save(ignore_permissions=True)
                     invoice.submit()
                     service.invoice_number = invoice.name
                     service.db_update()
@@ -147,9 +147,9 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
                     "service_end_date": due_date,
                 })
             
-        invoice.run_method("set_taxes")
+        # invoice.run_method("set_taxes")
 
-        invoice.insert(ignore_permissions=True)
+        invoice.save(ignore_permissions=True)
         invoice.submit()
 
         frappe.msgprint(f"Sales Invoice {invoice.name} created for period {payment_row.lease_start} to {payment_row.lease_end}", alert=True, indicator="green")
@@ -215,9 +215,9 @@ def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
                 "service_end_date": due_date,
             })
 
-        invoice.run_method("set_taxes")
+        # invoice.run_method("set_taxes")
 
-        invoice.insert(ignore_permissions=True)
+        invoice.save(ignore_permissions=True)
         invoice.submit()
 
         payment_row.invoice_number = invoice.name
