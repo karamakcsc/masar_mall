@@ -12,7 +12,6 @@ def check_lease_end_and_create_invoice():
         filters={
             "status": "Rent",
             "docstatus": 1,
-            "name": "LES-CNT-00215"
         },
         fields=["name", "lease_end"]
     )
