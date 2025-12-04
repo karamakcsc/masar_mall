@@ -7,15 +7,19 @@ frappe.ui.form.on('Lease Contract', {
         create_custom_buttons(frm);
         filter_rent_details(frm);
         calculate_totals(frm);
-       frm.set_df_property("rent_schedule", "options", generate_rent_schedule_html(frm));
-       frm.refresh_field("rent_schedule");
+        if (frm.doc.__islocal != 1) {
+            frm.set_df_property("rent_schedule", "options", generate_rent_schedule_html(frm));
+            frm.refresh_field("rent_schedule");
+        }
     },
 
     validate: function (frm) {
         calculate_totals(frm);
         totalQuantityAndService(frm);
-        frm.set_df_property("rent_schedule", "options", generate_rent_schedule_html(frm));
-        frm.refresh_field("rent_schedule");
+        if (frm.doc.__islocal != 1) {
+            frm.set_df_property("rent_schedule", "options", generate_rent_schedule_html(frm));
+            frm.refresh_field("rent_schedule");
+        }
     },
 
     rent_details: function (frm) {
