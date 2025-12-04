@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.utils import getdate, nowdate, flt
+from frappe.utils import getdate, nowdate, flt, rounded
 
 def check_lease_end_and_create_invoice():
     today = getdate(nowdate())
@@ -11,7 +11,8 @@ def check_lease_end_and_create_invoice():
         "Lease Contract",
         filters={
             "status": "Rent",
-            "docstatus": 1
+            "docstatus": 1,
+            "name": "LES-CNT-00215"
         },
         fields=["name", "lease_end"]
     )
@@ -68,13 +69,15 @@ def check_lease_end_and_create_invoice():
                     invoice.debit_to = company_doc.default_receivable_account if company_doc.default_receivable_account else frappe.throw(f"Please set Default Receivable Account in Company Settings")
                     item_doc = frappe.get_doc("Item", service.service_item)
 
+                    service_rate = rounded(flt(service.rate), 6)
+                    
                     invoice.append("items", {
                         "item_code": service.service_item,
                         "item_name": service.item_name or item_doc.item_name,
                         "item_group": item_doc.item_group,
                         "qty": 1,
-                        "rate": service.rate,
-                        "amount": service.rate,
+                        "rate": service_rate,
+                        "amount": service_rate,
                         "uom": item_doc.stock_uom,
                         "income_account": (
                             company_doc.default_income_account
@@ -126,19 +129,22 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         if not item_codes:
             frappe.throw(f"No items found in Lease Contract {lease_doc.name} to create invoice.")
 
-        total_months = flt(getattr(lease_doc, 'period_in_months', 0)) / flt(getattr(lease_doc, 'billing_frequency', 1))
+        total_months = rounded(flt(getattr(lease_doc, 'period_in_months', 0)) / flt(getattr(lease_doc, 'billing_frequency', 1)), 6)
         if not lease_doc.contract_multi_period:
             if lease_doc.allowance_period and lease_doc.in_period:
-                total_months -= lease_doc.allowance_period
+                total_months = rounded(total_months - flt(lease_doc.allowance_period), 6)
+        
         for item in item_codes:
             item_doc = frappe.get_doc("Item", item.rent_item)
             if not lease_doc.contract_multi_period:
+                item_rate = rounded(flt(item.amount) / total_months, 6)
+                
                 invoice.append("items", {
                     "item_code": item.rent_item,
                     "item_name": item_doc.item_name,
                     "item_group": item_doc.item_group,
                     "qty": 1,
-                    "rate": item.amount / total_months,
+                    "rate": item_rate,
                     "uom": item_doc.stock_uom,
                     "income_account": company_doc.default_income_account if company_doc.default_income_account else frappe.throw(f"Please set Default Income Account in Company Settings"),
                     "enable_deferred_revenue": 1,
@@ -197,15 +203,15 @@ def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
             frappe.throw("Invalid 'month_in_period' value in period details.")
 
         if lease_doc.allowance_period and lease_doc.in_period and period == lease_doc.period_details[0]:
-            period_months -= lease_doc.allowance_period
+            period_months = rounded(period_months - flt(lease_doc.allowance_period), 6)
 
-        service_rent_monthly = flt(period.service_amount) / period_months
-        space_rent_monthly = flt(period.space_amount) / period_months
+        service_rent_monthly = rounded(flt(period.service_amount) / period_months, 6)
+        space_rent_monthly = rounded(flt(period.space_amount) / period_months, 6)
         
         for rent_item in lease_doc.rent_details:
             item_doc = frappe.get_doc("Item", rent_item.rent_item)
             monthly_rate = space_rent_monthly if rent_item.is_stock_item else service_rent_monthly
-            invoice_rate = monthly_rate * flt(lease_doc.billing_frequency)
+            invoice_rate = rounded(monthly_rate * flt(lease_doc.billing_frequency), 6)
 
             invoice.append("items", {
                 "item_code": rent_item.rent_item,

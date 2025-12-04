@@ -3,7 +3,7 @@
 
 import frappe
 from dateutil.relativedelta import relativedelta
-from frappe.utils import add_months, get_last_day, getdate, flt, cint, get_first_day
+from frappe.utils import add_months, get_last_day, getdate, flt, cint, get_first_day, rounded
 from frappe.model.document import Document
 from masar_mall.utils.create_log import create_log, create_floor_unit_log
 
@@ -132,7 +132,7 @@ class LeaseContract(Document):
                 period_start = getdate(period.from_date)
                 period_end = getdate(period.to_date)
                 months_in_period = cint(period.month_in_period)
-                monthly_rent = flt(period.amount) / months_in_period
+                monthly_rent = rounded(flt(period.amount / months_in_period, 6), 6)
 
                 current_start = add_months(period_start, shift_months) if idx == 0 else period_start
 
@@ -140,7 +140,7 @@ class LeaseContract(Document):
                     self.add_free_months(schedule, current_start, allowance_months)
                     current_start = add_months(current_start, allowance_months)
                     free_months_applied = True
-                    monthly_rent = flt(period.amount) / (months_in_period - allowance_months)
+                    monthly_rent = rounded(flt(period.amount / (months_in_period - allowance_months), 6), 6)
                 paid_period_end = period_end
                 if self.in_period and allowance_months > 0 and idx == 0:
                     paid_period_end = add_months(current_start, months_in_period - allowance_months) - relativedelta(days=1)
@@ -164,15 +164,15 @@ class LeaseContract(Document):
         end_date = getdate(self.lease_end)
         total_months = self.period_in_months
 
-        rent_total = sum(flt(d.amount) for d in self.rent_details if d.rent_space)
-        service_total = sum(flt(d.amount) for d in self.rent_details if not d.rent_space)
+        rent_total = sum(rounded(flt(d.amount, 6), 6) for d in self.rent_details if d.rent_space)
+        service_total = sum(rounded(flt(d.amount, 6), 6) for d in self.rent_details if not d.rent_space)
         total_rent = rent_total + service_total
-        monthly_rent = flt(total_rent / total_months)
+        monthly_rent = rounded(flt(total_rent / total_months, 6), 6)
         total_months_with_allowance = total_months
         if self.out_period and allowance_months > 0:
             total_months_with_allowance += allowance_months
         if self.in_period and allowance_months > 0:
-            monthly_rent = flt(total_rent / (total_months - allowance_months))
+            monthly_rent = rounded(flt(total_rent / (total_months - allowance_months), 6), 6)
 
         schedule.total_peroid = total_months_with_allowance
         current_start = start_date
@@ -226,7 +226,7 @@ class LeaseContract(Document):
             else:
                 period_end = get_last_day(add_months(period_start, months_in_invoice - 1))
             
-            invoice_amount = monthly_rent * months_in_invoice
+            invoice_amount = rounded(flt(monthly_rent * months_in_invoice, 6), 6)
             
             schedule.append("invoice", {
                 "lease_start": period_start,
@@ -283,3 +283,146 @@ class LeaseContract(Document):
     def legal_case(self):
         frappe.db.set_value(self.doctype, self.name, "status", "Legal Case")
         frappe.db.commit()
+        
+
+    @frappe.whitelist()
+    def generate_schedule_preview(self):
+        if not self.lease_start or not self.lease_end:
+            frappe.throw("Lease start and end dates must be set to preview lease schedule")
+            
+        if not self.period_in_months:
+            frappe.throw("Period in months must be set to preview lease schedule")
+        
+        if not self.billing_frequency:
+            frappe.throw("Billing frequency must be set to preview lease schedule")
+
+        preview_data = {
+            "invoice": [],
+            "total_period": 0
+        }
+
+        billing_interval = cint(self.billing_frequency)
+        allowance_months = self.allowance_period if self.allowance_period else 0
+
+        if self.contract_multi_period:
+            if not self.period_details:
+                frappe.throw("Period details are required for multi-period contracts to preview lease schedule")
+
+            total_schedule_months = 0
+            free_months_applied = False
+
+            if self.out_period and allowance_months > 0:
+                first_period_start = getdate(self.period_details[0].from_date)
+                self.preview_free_months(preview_data, first_period_start, allowance_months)
+                shift_months = allowance_months
+            else:
+                shift_months = 0
+
+            for idx, period in enumerate(self.period_details):
+                period_start = getdate(period.from_date)
+                period_end = getdate(period.to_date)
+                months_in_period = cint(period.month_in_period)
+                monthly_rent = flt(period.amount) / months_in_period
+
+                current_start = add_months(period_start, shift_months) if idx == 0 else period_start
+
+                if self.in_period and allowance_months > 0 and not free_months_applied:
+                    self.preview_free_months(preview_data, current_start, allowance_months)
+                    current_start = add_months(current_start, allowance_months)
+                    free_months_applied = True
+                    monthly_rent = flt(period.amount) / (months_in_period - allowance_months)
+
+                paid_period_end = period_end
+                if self.in_period and allowance_months > 0 and idx == 0:
+                    paid_period_end = add_months(current_start, months_in_period - allowance_months) - relativedelta(days=1)
+
+                self.preview_paid_invoices(preview_data, current_start, paid_period_end, 
+                                            months_in_period if idx > 0 else months_in_period - (allowance_months if self.in_period else 0), 
+                                            billing_interval, monthly_rent)
+                total_schedule_months += months_in_period
+
+            if self.out_period and allowance_months > 0:
+                total_schedule_months += allowance_months
+
+            preview_data["total_period"] = total_schedule_months
+            return preview_data
+
+        if not self.rent_details:
+            frappe.throw("Rent details are required to preview lease schedule")
+
+        start_date = getdate(self.lease_start)
+        end_date = getdate(self.lease_end)
+        total_months = self.period_in_months
+
+        rent_total = sum(flt(d.amount) for d in self.rent_details if d.rent_space)
+        service_total = sum(flt(d.amount) for d in self.rent_details if not d.rent_space)
+        total_rent = rent_total + service_total
+        monthly_rent = flt(total_rent / total_months)
+        total_months_with_allowance = total_months
+        
+        if self.out_period and allowance_months > 0:
+            total_months_with_allowance += allowance_months
+        if self.in_period and allowance_months > 0:
+            monthly_rent = flt(total_rent / (total_months - allowance_months))
+
+        preview_data["total_period"] = total_months_with_allowance
+        current_start = start_date
+
+        if self.in_period and allowance_months > 0:
+            self.preview_free_months(preview_data, current_start, allowance_months)
+            current_start = add_months(current_start, allowance_months)
+            self.preview_paid_invoices(preview_data, current_start, end_date, total_months - allowance_months, billing_interval, monthly_rent)
+        elif self.out_period and allowance_months > 0:
+            self.preview_free_months(preview_data, current_start, allowance_months)
+            current_start = add_months(current_start, allowance_months)
+            total_months_with_allowance = total_months + allowance_months
+            extended_end_date = add_months(end_date, allowance_months)
+            self.preview_paid_invoices(preview_data, current_start, extended_end_date, total_months, billing_interval, monthly_rent)
+        else:
+            self.preview_paid_invoices(preview_data, current_start, end_date, total_months, billing_interval, monthly_rent)
+
+        return preview_data
+
+    def preview_free_months(self, preview_data, start_date, num_months):
+        current_date = start_date
+        
+        for i in range(num_months):
+            period_start = current_date
+            period_end = get_last_day(period_start)
+            
+            preview_data["invoice"].append({
+                "lease_start": str(period_start),
+                "lease_end": str(period_end),
+                "amount": 0,
+                "is_allowance": 1
+            })
+            
+            current_date = add_months(current_date, 1)
+
+    def preview_paid_invoices(self, preview_data, start_date, end_date, total_months, billing_interval, monthly_rent):
+        if total_months <= 0:
+            return
+        
+        current_date = start_date
+        remaining_months = total_months
+        
+        while remaining_months > 0:
+            months_in_invoice = min(billing_interval, remaining_months)
+            period_start = current_date
+            
+            if remaining_months <= billing_interval:
+                period_end = end_date
+            else:
+                period_end = get_last_day(add_months(period_start, months_in_invoice - 1))
+            
+            invoice_amount = monthly_rent * months_in_invoice
+            
+            preview_data["invoice"].append({
+                "lease_start": str(period_start),
+                "lease_end": str(period_end),
+                "amount": invoice_amount,
+                "is_allowance": 0
+            })
+            
+            current_date = add_months(current_date, months_in_invoice)
+            remaining_months -= months_in_invoice

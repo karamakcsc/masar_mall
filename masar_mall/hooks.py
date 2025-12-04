@@ -257,5 +257,13 @@ fixtures = [
                 "Customer-custom_business_purpose"
             ]
         ]
-    ]}
+    ]},
+    {"dt": "Property Setter", "filters": [
+        [
+            "name", "in", [
+                "Payment Entry-reference_no-mandatory_depends_on",
+                "Payment Entry-reference_date-mandatory_depends_on"
+            ]
+        ]
+    ]},
 ]

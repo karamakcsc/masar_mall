@@ -1,0 +1,70 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"j4qPFVR4U2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Rent System</span>\",\"col\":12}},{\"id\":\"zdSR5MVto2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Ux1rdE5kXW\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\",\"col\":12}},{\"id\":\"9VXPnaraHw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"City\",\"col\":4}},{\"id\":\"2q89mWSLMO\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Property\",\"col\":4}},{\"id\":\"hS7H5Oz_U3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Floor\",\"col\":4}},{\"id\":\"OjSUw-7aco\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Floor Unit\",\"col\":4}},{\"id\":\"fnCC08ov2V\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lease Contract\",\"col\":4}}]",
+ "creation": "2025-09-24 20:02:00.018488",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "color-review-points",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Rent System",
+ "links": [],
+ "modified": "2025-11-10 13:08:22.304443",
+ "modified_by": "Administrator",
+ "module": "Masar Mall",
+ "name": "Rent System",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 28.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "City",
+   "link_to": "City",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Property",
+   "link_to": "Property",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Floor",
+   "link_to": "Floor",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Floor Unit",
+   "link_to": "Floor Unit",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Lease Contract",
+   "link_to": "Lease Contract",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Rent System"
+}
