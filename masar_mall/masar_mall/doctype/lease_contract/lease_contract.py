@@ -357,7 +357,7 @@ class LeaseContract(Document):
         rent_total = sum(flt(d.amount) for d in self.rent_details if d.rent_space)
         service_total = sum(flt(d.amount) for d in self.rent_details if not d.rent_space)
         total_rent = rent_total + service_total
-        monthly_rent = flt(total_rent / total_months)
+        monthly_rent = flt(total_rent) / flt(total_months)
         total_months_with_allowance = total_months
         
         if self.out_period and allowance_months > 0:
@@ -400,11 +400,11 @@ class LeaseContract(Document):
             current_date = add_months(current_date, 1)
 
     def preview_paid_invoices(self, preview_data, start_date, end_date, total_months, billing_interval, monthly_rent):
-        if total_months <= 0:
+        if flt(total_months) <= 0:
             return
         
         current_date = start_date
-        remaining_months = total_months
+        remaining_months = flt(total_months)
         
         while remaining_months > 0:
             months_in_invoice = min(billing_interval, remaining_months)
