@@ -88,9 +88,8 @@ def check_lease_end_and_create_invoice():
                         "service_end_date": due_date,
                     })
 
-                    # invoice.run_method("set_taxes")
-
-                    invoice.save(ignore_permissions=True)
+                    setup_invoice_taxes(invoice, company_doc.name)
+                    invoice.insert(ignore_permissions=True)
                     invoice.submit()
                     service.invoice_number = invoice.name
                     service.db_update()
@@ -146,10 +145,10 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
                     "service_start_date": posting_date,
                     "service_end_date": due_date,
                 })
-            
-        # invoice.run_method("set_taxes")
 
-        invoice.save(ignore_permissions=True)
+        setup_invoice_taxes(invoice, company_doc.name)
+
+        invoice.insert(ignore_permissions=True)
         invoice.submit()
 
         frappe.msgprint(f"Sales Invoice {invoice.name} created for period {payment_row.lease_start} to {payment_row.lease_end}", alert=True, indicator="green")
@@ -215,9 +214,9 @@ def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
                 "service_end_date": due_date,
             })
 
-        # invoice.run_method("set_taxes")
+        setup_invoice_taxes(invoice, company_doc.name)
 
-        invoice.save(ignore_permissions=True)
+        invoice.insert(ignore_permissions=True)
         invoice.submit()
 
         payment_row.invoice_number = invoice.name
@@ -226,3 +225,29 @@ def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
 
     except Exception as e:
         frappe.throw(f"Failed to create multi-period invoice: {str(e)}")
+
+def setup_invoice_taxes(invoice, company):
+    cost_center = frappe.get_cached_value("Company", company, "cost_center")
+    
+    tax_accounts = [
+        {
+            "account_head": "220000003 - VAT - BM",
+            "description": "VAT",
+            "rate": 0,
+        },
+        {
+            "account_head": "2210000001 - VAT 0 - BM",
+            "description": "VAT 0",
+            "rate": 0,
+        }
+    ]
+    
+    for tax in tax_accounts:
+        invoice.append("taxes", {
+            "charge_type": "On Net Total",
+            "account_head": tax["account_head"],
+            "description": tax["description"],
+            "rate": tax["rate"],
+            "included_in_print_rate": 0,
+            "cost_center": cost_center
+        })
