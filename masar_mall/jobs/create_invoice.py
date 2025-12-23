@@ -116,6 +116,7 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         item_codes = frappe.get_all("Lease Contract Details",
             filters={
                 "parent": lease_doc.name,
+                "amount": ("<=", 0)
             },
             fields=["rent_item", "amount"]
         )                
@@ -197,6 +198,8 @@ def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
         space_rent_monthly = rounded(flt(period.space_amount) / period_months, 6)
         
         for rent_item in lease_doc.rent_details:
+            if rent_item.amount <= 0:
+                continue
             item_doc = frappe.get_doc("Item", rent_item.rent_item)
             monthly_rate = space_rent_monthly if rent_item.is_stock_item else service_rent_monthly
             invoice_rate = rounded(monthly_rate * flt(lease_doc.billing_frequency), 6)
