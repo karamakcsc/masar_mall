@@ -90,7 +90,7 @@ def check_lease_end_and_create_invoice():
 
                     setup_invoice_taxes(invoice, company_doc.name)
                     invoice.insert(ignore_permissions=True)
-                    invoice.submit()
+                    # invoice.submit()
                     service.invoice_number = invoice.name
                     service.db_update()
                 
@@ -116,7 +116,7 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         item_codes = frappe.get_all("Lease Contract Details",
             filters={
                 "parent": lease_doc.name,
-                "amount": ("<=", 0)
+                "amount": (">", 0)
             },
             fields=["rent_item", "amount"]
         )                
@@ -150,7 +150,7 @@ def create_individual_invoice(lease_doc, payment_row, schedule_doc):
         setup_invoice_taxes(invoice, company_doc.name)
 
         invoice.insert(ignore_permissions=True)
-        invoice.submit()
+        # invoice.submit()
 
         frappe.msgprint(f"Sales Invoice {invoice.name} created for period {payment_row.lease_start} to {payment_row.lease_end}", alert=True, indicator="green")
 
@@ -220,7 +220,7 @@ def create_multi_period_invoices(lease_doc, payment_row, schedule_doc):
         setup_invoice_taxes(invoice, company_doc.name)
 
         invoice.insert(ignore_permissions=True)
-        invoice.submit()
+        # invoice.submit()
 
         payment_row.invoice_number = invoice.name
         payment_row.invoice_status = invoice.status
